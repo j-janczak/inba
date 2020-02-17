@@ -5,10 +5,9 @@ const sd = require(`./my_modules/simpleDiscord.js`);
 const op = require(`./my_modules/inbaOutputs.js`);
 const commands = require(`./my_modules/commands.js`);
 const colors = require('colors');
-const prompt = require('prompt');
 
-prompt.start();
-
+/*const prompt = require('prompt');
+prompt.start();*/
 
 client.commands = commands.loadModules(`./commands`);
 

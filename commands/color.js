@@ -7,7 +7,7 @@ const fs = require(`fs`);
 const rolesColorJson = fs.readFileSync(`./config/roles_color.json`);
 const rolesColor = JSON.parse(rolesColorJson);
 
-const colorPrefix = `[InColor]`;
+const colorPrefix = `[Inba]`;
 
 module.exports = {
 	name: `color`,
