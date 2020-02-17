@@ -1,0 +1,31 @@
+{
+  "name": "inba",
+  "version": "1.0.0",
+  "description": "Powerful Discord bot",
+  "main": "inba.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheFlashes/Inba.git"
+  },
+  "keywords": [
+    "inba",
+    "bot",
+    "discord",
+    "moderation"
+  ],
+  "author": "TheFlashes",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TheFlashes/Inba/issues"
+  },
+  "homepage": "https://github.com/TheFlashes/Inba#readme",
+  "dependencies": {
+    "colors": "^1.4.0",
+    "discord.js": "^11.5.1",
+    "mysql": "^2.18.1",
+    "prompt": "^1.0.0"
+  }
+}
