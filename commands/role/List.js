@@ -13,7 +13,7 @@ module.exports = {
 
         var rolesString = "";
         for (let roleIndex = roles.length - 1; roleIndex >= 0; roleIndex--) {
-            rolesString += `• ${roles[roleIndex]}\n`;
+            rolesString += `· ${roles[roleIndex]}\n`;
         }
 
         const rolesEmbed = new Discord.RichEmbed();

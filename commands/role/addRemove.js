@@ -40,7 +40,7 @@ module.exports = {
         else if(args.length == 5) {
             let taskTimeStamp = false;
             if(taskTimeStamp = timeFormat.argToTime(args[4])) {
-                db.query("INSERT INTO `mrinba`.`activeTasks` (`activeTaskID`, `serverFK`, `userFK`, `taskFK`, `taskData`, `endTimeStamp`) VALUES (null, '?', '?', 1, '?', '?')", [message.guild.id, member.id, role.id, taskTimeStamp], result => {
+                db.query("INSERT INTO `mrinba`.`activeTasks` (`activeTaskID`, `serverFK`, `userFK`, `taskFK`, `taskData`, `endTimeStamp`) VALUES (null, ?, ?, 1, ?, ?)", [message.guild.id, member.id, role.id, taskTimeStamp], result => {
                     member.addRole(role.id)
                     .then(log => {
                         const successEmbed = new Discord.RichEmbed()
