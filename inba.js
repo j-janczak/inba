@@ -33,9 +33,9 @@ client.on(`message`, message => {
 
     console.log(`·`.brightGreen, `${message.member.displayName}`.cyan, `in`.grey, `${message.guild.name}`.cyan, `at`.grey, `#${message.channel.name}:`.cyan, `${message.cleanContent}`);
 
-    if (message.content.search("jezus") != -1){
+    /*if (message.content.search("jezus") != -1){
         message.channel.send(`tak jak pan jezus powiedział`);
-    }
+    }*/
     
     if (!message.content.startsWith(botConfig.prefix)) return;
 
