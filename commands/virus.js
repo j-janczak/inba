@@ -1,64 +1,63 @@
 const Discord = require('discord.js');
 const https = require('https');
-const sd = require(`../my_modules/simpleDiscord.js`);
-const op = require(`../my_modules/inbaOutputs.js`);
+const HTMLParser = require('node-html-parser');
+const botConfig = require(`../config/config.json`);
 
 function _execute(message, args) {
     if (args.length < 2) return;
 
     let request = https.get(`https://www.worldometers.info/coronavirus/`, function(response) {
         let webSite = ``;
-        let country = args[1].charAt(0).toUpperCase() + args[1].slice(1);
+        let country = message.cleanContent.slice(botConfig.prefix.length + args[0].length + 2);
 
         response.on(`data`, (chunk) => {
             webSite += chunk;
         }).on(`end`, () => {
-            let n = webSite.search(`"> ${country} <\/td>`);
-            if (n == -1) {
-                message.reply(`Nie znalazłem takiego kraju!`);
-                return;
-            }
+            let domWebSite = HTMLParser.parse(webSite);
+            let countryName = ``;
+            let countryRow = domWebSite.querySelector(`#main_table_countries tbody`).childNodes.find(row => {
+                if (row.tagName == `tr`) {
+                    let countryFind = false;
+                    if (row.childNodes[1].childNodes.length == 3) {
+                        if (country.toUpperCase() == row.childNodes[1].childNodes[1].childNodes[0].rawText.toUpperCase()) {
+                            countryFind = true;
+                            countryName = row.childNodes[1].childNodes[1].childNodes[0].rawText;
+                        }
+                    }
+                    else {
+                        if (country.toUpperCase() == row.childNodes[1].childNodes[0].rawText.slice(1, -1).toUpperCase()) {
+                            countryFind = true;
+                            countryName = row.childNodes[1].childNodes[0].rawText.slice(1, -1);
+                        } 
+                    }
+                    if (countryFind) {
+                        return row;
+                    } else return false;
+                }
+            });
 
-            webSite = webSite.slice(n - 140);
-            let trStart = webSite.search(`<tr style="">`);
-            webSite = webSite.slice(trStart);
-            let trEnd = webSite.search(`</tr>`);
-            webSite = webSite.slice(14, trEnd);
-
-            let patt = />\s?(\+*\d*)\s?<\/td>/g;
-            let regEx = new RegExp(patt);
-            let dataArray = [];
-            while(result = regEx.exec(webSite)) {
-                dataArray.push(result);
-            }
-
-            /*
-                [0][1] - Total Cases
-                [1][1] - New cases
-                [2][1] - Total deaths
-                [3][1] - New deaths
-                [4][1] - Total Recovered
-                [5][1] - Active Cases
-            */
-
-            let confirmed = (dataArray[0][1] != `` ? dataArray[0][1] : 0);
-            let newCases = (dataArray[1][1] != `` ? dataArray[1][1] : 0);
-            let recovered = (dataArray[4][1] != `` ? dataArray[4][1] : 0);
-            let deaths = (dataArray[2][1] != `` ? dataArray[2][1] : 0);
-
-            let desc = `😷 \`\`Confirmed\`\`: **\`\`${confirmed}\`\`**\n
+            if (countryRow) {
+                let confirmed = (countryRow.childNodes[3].childNodes[0].rawText.trim() != `` ? countryRow.childNodes[3].childNodes[0].rawText.trim() : 0);
+                let newCases = (countryRow.childNodes[6].childNodes[0].rawText.trim() != `` ? countryRow.childNodes[6].childNodes[0].rawText.trim() : 0);
+                let deaths = (countryRow.childNodes[8].childNodes[0].rawText.trim() != `` ? countryRow.childNodes[8].childNodes[0].rawText.trim() : 0);
+                let recovered = (countryRow.childNodes[12].childNodes[0].rawText.trim() != `` ? countryRow.childNodes[12].childNodes[0].rawText.trim() : 0);
+            
+                let desc = `😷 \`\`Confirmed\`\`: **\`\`${confirmed}\`\`**\n
 🤢 \`\`New cases\`\`: **\`\`${newCases}\`\`**\n
 🥳 \`\`Recovered\`\`: **\`\`${recovered}\`\`**\n
 ☠ \`\`Deaths\`\`: **\`\`${deaths}\`\`**
 `;
 
-            const rolesEmbed = new Discord.RichEmbed()
-                .setTitle(`COVID-19 status for ${country}`)
-                .setDescription(desc)
-                .setFooter(`Source: https://www.worldometers.info/coronavirus/`)
-                .setTimestamp()
-                .setColor(`#E57373`);
-            message.channel.send(rolesEmbed);
+                const rolesEmbed = new Discord.RichEmbed()
+                    .setTitle(`COVID-19 status for ${countryName}`)
+                    .setDescription(desc)
+                    .setFooter(`Source: https://www.worldometers.info/coronavirus/`)
+                    .setTimestamp()
+                    .setColor(`#E57373`);
+                message.channel.send(rolesEmbed);
+            } else {
+                message.reply(`Nie znalazłem takiego kraju!`);
+            }
         }).on(`error`, (e) => {
             if (e.errno == `ETIMEDOUT`) message.channel.send(`Error: Strona z danymi nie odpowiada 😕`);
             console.error(e);

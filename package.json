@@ -24,9 +24,9 @@
   "homepage": "https://github.com/TheFlashes/Inba#readme",
   "dependencies": {
     "colors": "^1.4.0",
-    "csv-parser": "^2.3.2",
     "discord.js": "^11.5.1",
     "mysql": "^2.18.1",
+    "node-html-parser": "^1.2.12",
     "prompt": "^1.0.0"
   }
 }
