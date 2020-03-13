@@ -9,6 +9,8 @@ function _execute(message) {
     let sendTime = message.createdTimestamp;
     let isAuthorBot = message.author.bot;
 
+    if (messageContent.trim() == ``) return;
+
     db.query("INSERT INTO `mrinba`.`MessageLogs` (idMessage, idServer, idChannel, idMember, messageContent, sendTime, isDelete, isAuthorBot) VALUES (?, ?, ?, ?, ?, ?, 0, ?);",
             [idMessage, idServer, idChannel, idMember, messageContent, sendTime, isAuthorBot], 
             (result) => {}
