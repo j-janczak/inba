@@ -1,13 +1,10 @@
 const {client, clientEmiter} = require(`./my_modules/discordClient.js`);
 const botConfig = require(`./config/config.json`);
-const db = require(`./my_modules/database.js`);
 const sd = require(`./my_modules/simpleDiscord.js`);
 const op = require(`./my_modules/inbaOutputs.js`);
 const commands = require(`./my_modules/commands.js`);
+const messageLogs = require(`./my_modules/messageLogs.js`);
 const colors = require('colors');
-
-/*const prompt = require('prompt');
-prompt.start();*/
 
 client.commands = commands.loadModules(`./commands`);
 
@@ -15,27 +12,17 @@ client.once(`ready`, () => {
     client.user.setActivity(`Type !mi help`, {type: `PLAYING`});
     console.log(`Inba powstał! - ${client.guilds.size} serwerów 🖥`.gray);
     client.guilds.forEach(g => {console.log(g.name.gray)});
-
-    /*prompt.get(['command'], function (err, result) {
-        if (err) { console.error }
-        console.log(result.command);
-    });*/
 });
 
 client.on(`message`, message => {
     if (message.author.id == client.user.id) return;
     if (message.channel.type == `dm`) {
-        client.commands.get(`poll`).execute(message, []);
         return;
     }
-    //if (message.content.match(/^\**_*(x|X)D+\**_*$/) && (message.guild.id == `616029849882066959` || message.guild.id == `599715795391610904`)) message.channel.send(`XD`);
-    //if (message.author.id == `599379615886344192`) message.react(`🏳️‍🌈`).then();
+
+    if (message.channel.type == `text` && message.author.id != `670186603607621633`) messageLogs.execute(message);
 
     console.log(`·`.brightGreen, `${message.member.displayName}`.cyan, `in`.grey, `${message.guild.name}`.cyan, `at`.grey, `#${message.channel.name}:`.cyan, `${message.cleanContent}`);
-
-    /*if (message.content.search("jezus") != -1){
-        message.channel.send(`tak jak pan jezus powiedział`);
-    }*/
     
     if (!message.content.startsWith(botConfig.prefix)) return;
 
@@ -82,6 +69,10 @@ client.on(`message`, message => {
             sd.send(message, op.random(`commandNotFound`));
         }
     }
+});
+
+client.on(`messageDelete`, message => {
+    messageLogs.onDelete(message);
 });
 
 client.on(`guildMemberAdd`, member => {

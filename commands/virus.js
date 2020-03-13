@@ -1,7 +1,6 @@
 const Discord = require('discord.js');
 const http = require('http');
 const HTMLParser = require('node-html-parser');
-const botConfig = require(`../config/config.json`);
 
 function _execute(message, args) {
 

@@ -1,6 +1,6 @@
 const Discord = require(`discord.js`);
 const {client, clientEmiter} = require(`../my_modules/discordClient.js`);
-const permissions = require('./checkPermission.js');
+const permissions = require('../commands/checkPermission.js');
 const timeFormat = require('../my_modules/timeFormat.js');
 const db = require(`../my_modules/database.js`);
 const op = require(`../my_modules/inbaOutputs.js`);
