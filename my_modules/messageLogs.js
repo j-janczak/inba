@@ -11,7 +11,7 @@ function _execute(message) {
 
     if (messageContent.trim() == ``) return;
 
-    db.query("INSERT INTO `mrinba`.`MessageLogs` (idMessage, idServer, idChannel, idMember, messageContent, sendTime, isDelete, isAuthorBot) VALUES (?, ?, ?, ?, ?, ?, 0, ?);",
+    db.query("INSERT INTO `mrinba`.`MessageLogs` (idMessage, idServer, idChannel, idMember, messageContent, sendTime, isDelete, isAuthorBot) VALUES (?, ?, ?, ?, ?, ?, 0, ?) ON DUPLICATE KEY UPDATE idMessage=idMessage;",
             [idMessage, idServer, idChannel, idMember, messageContent, sendTime, isAuthorBot], 
             (result) => {}
     );

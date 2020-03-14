@@ -30,7 +30,8 @@ function _execute(message, args) {
 function onSiteDownloaded(message, webSite) {
     let virusData = [];
 
-    webSite.querySelectorAll(`.infoborder`).forEach(p => {
+    webSite.querySelectorAll(`.infoborder`).forEach((p, pi) => {
+        if (pi == 2) return;
         let n = p.childNodes[0].rawText.search(`:`);
         virusData.push(p.childNodes[0].rawText.slice(n + 2));
     });
