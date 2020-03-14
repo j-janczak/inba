@@ -127,6 +127,10 @@
         "default_roleList": "Each new user gets the following roles: %s",
         "info_desc": "Role information"
     },
+    "dailyLogs": {
+        "title": "Co to był za spam!",
+        "desc": "Czyli podsumowanie dnia na serwerze **%s**"
+    },
     "help": {
         "embed": [
             "Legend:",

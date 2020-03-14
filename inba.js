@@ -22,7 +22,7 @@ client.on(`message`, message => {
 
     if (message.channel.type == `text` && message.author.id != `670186603607621633`) messageLogs.execute(message);
 
-    console.log(`·`.brightGreen, `${message.member.displayName}`.cyan, `in`.grey, `${message.guild.name}`.cyan, `at`.grey, `#${message.channel.name}:`.cyan, `${message.cleanContent}`);
+    console.log(`·`.brightGreen, `${message.member.displayName}`.cyan, `in`.grey, `${message.guild.name}`.cyan, `at`.grey, `#${message.channel.name}:`.cyan, `${message.content}`);
     
     if (!message.content.startsWith(botConfig.prefix)) return;
 
