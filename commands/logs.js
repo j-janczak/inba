@@ -79,7 +79,7 @@ function onDbWorkFinish(message, dbData) {
     const logEmbed = new Discord.RichEmbed()
         .setTitle(op.direct(`dailyLogs`, `title`))
         .setDescription(op.direct(`dailyLogs`, `desc`, [message.guild.name]))
-        .setThumbnail(message.guild.icon)
+        .setThumbnail(message.guild.iconURL)
         .setColor(`#B0E0E6`)
         .addField(`Te kanały dziś rządziły`, channelsStr, true)
         .addField(`Wiadomości ogółem`, dbData.msgTotal, true)
