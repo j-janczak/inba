@@ -26,7 +26,7 @@ function _execute(message, args) {
         }
     }
 
-    db.query("SELECT DISTINCT(idMember) AS `member_id`, ( SELECT count(*) FROM `MessageLogs` WHERE `MessageLogs`.`idServer` = ? AND `MessageLogs`.`idMember` = `member_id` AND `MessageLogs`.`isDelete` = 0 AND `MessageLogs`.`sendTime` >= ?) as `msgCount` FROM `MessageLogs` WHERE `MessageLogs`.`idServer` = ? AND `MessageLogs`.`isDelete` = 0 AND `MessageLogs`.`sendTime` >= ? ORDER BY `msgCount` DESC LIMIT 10", [message.guild.id, todayTimestamp, message.guild.id, todayTimestamp], result => {
+    db.query("SELECT DISTINCT(idMember) AS `member_id`, ( SELECT count(*) FROM `MessageLogs` WHERE `MessageLogs`.`idServer` = ? AND `MessageLogs`.`idMember` = `member_id` AND `MessageLogs`.`isDelete` = 0 AND `MessageLogs`.`sendTime` >= ? AND `MessageLogs`.`isAuthorBot` = 0) as `msgCount` FROM `MessageLogs` WHERE `MessageLogs`.`idServer` = ? AND `MessageLogs`.`isDelete` = 0 AND `MessageLogs`.`sendTime` >= ? AND `MessageLogs`.`isAuthorBot` = 0 ORDER BY `msgCount` DESC LIMIT 10", [message.guild.id, todayTimestamp, message.guild.id, todayTimestamp], result => {
         result.forEach(row => {
             logResult.users.push(row);
         });
@@ -50,7 +50,7 @@ function _execute(message, args) {
         logResult.stepCheck();
     });
 
-    db.query("SELECT DISTINCT(idChannel) AS `channel_id`, (SELECT count(*) FROM `MessageLogs` WHERE `MessageLogs`.`idChannel` = `channel_id` AND `MessageLogs`.`isDelete` = 0 AND `MessageLogs`.`sendTime` >= ? AND `MessageLogs`.`isAuthorBot` = 0) as `msgCount` FROM`MessageLogs` WHERE `MessageLogs`.`idServer` = ? AND `MessageLogs`.`isDelete` = 0 AND `MessageLogs`.`sendTime` >= ? AND `MessageLogs`.`isAuthorBot` = 0 ORDER BY `msgCount` DESC LIMIT 10", [todayTimestamp, message.guild.id, todayTimestamp], result => {
+    db.query("SELECT DISTINCT(idChannel) AS `channel_id`, (SELECT count(*) FROM `MessageLogs` WHERE `MessageLogs`.`idChannel` = `channel_id` AND `MessageLogs`.`isDelete` = 0 AND `MessageLogs`.`sendTime` >= ?) as `msgCount` FROM`MessageLogs` WHERE `MessageLogs`.`idServer` = ? AND `MessageLogs`.`isDelete` = 0 AND `MessageLogs`.`sendTime` >= ? ORDER BY `msgCount` DESC LIMIT 10", [todayTimestamp, message.guild.id, todayTimestamp], result => {
         result.forEach(row => {
             logResult.channels.push(row);
         });
