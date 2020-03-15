@@ -26,7 +26,7 @@ function _execute(message, user) {
         userData.stepIncrement();
     })
 
-    db.query("SELECT DISTINCT(idChannel) AS `channel_id`, ( SELECT count(*) FROM `MessageLogs` WHERE `MessageLogs`.`idChannel` = `channel_id` AND `MessageLogs`.`idMember` = ? AND `MessageLogs`.`idServer` = ?) as msgTotal, ( SELECT count(*) FROM `MessageLogs` WHERE `MessageLogs`.`idChannel` = `channel_id` AND `MessageLogs`.`idMember` = ? AND `MessageLogs`.`idServer` = ? AND `MessageLogs`.`sendTime` >= ? ) as msgToday FROM `MessageLogs` WHERE `MessageLogs`.`idMember` = ? AND `MessageLogs`.`idServer` = ? AND `MessageLogs`.`sendTime` >= ? LIMIT 10", [user.user.id, message.guild.id, user.user.id, message.guild.id, timeFormat.getTodayTimeStamp(), user.user.id, message.guild.id, timeFormat.getTodayTimeStamp()], result => {
+    db.query("SELECT DISTINCT(idChannel) AS `channel_id`, ( SELECT count(*) FROM `MessageLogs` WHERE `MessageLogs`.`idChannel` = `channel_id` AND `MessageLogs`.`idMember` = ? AND `MessageLogs`.`idServer` = ?) as msgTotal, ( SELECT count(*) FROM `MessageLogs` WHERE `MessageLogs`.`idChannel` = `channel_id` AND `MessageLogs`.`idMember` = ? AND `MessageLogs`.`idServer` = ? AND `MessageLogs`.`sendTime` >= ? ) as msgToday FROM `MessageLogs` WHERE `MessageLogs`.`idMember` = ? AND `MessageLogs`.`idServer` = ? AND `MessageLogs`.`sendTime` >= ? ORDER BY `msgToday` LIMIT 10", [user.user.id, message.guild.id, user.user.id, message.guild.id, timeFormat.getTodayTimeStamp(), user.user.id, message.guild.id, timeFormat.getTodayTimeStamp()], result => {
         userData.topChannels = result;
         userData.stepIncrement();
     })
@@ -105,4 +105,6 @@ module.exports = {
         `MessageLogs`.`idMember` = '599569173990866965' AND
         `MessageLogs`.`idServer` = '599715795391610904' AND
         `MessageLogs`.`sendTime` >= 1584230400000
+    ORDER BY `msgToday`
+    LIMIT 10
 */
