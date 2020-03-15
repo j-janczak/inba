@@ -18,7 +18,7 @@ function _execute(message, user) {
         }
     }
 
-    userData.member = message.member;
+    userData.member = user;
 
     db.query("SELECT (SELECT count(*) FROM `MessageLogs` WHERE `MessageLogs`.`idMember` = ? AND `MessageLogs`.`idServer` = ?) as msgTotal, (SELECT count(*) FROM `MessageLogs` WHERE `MessageLogs`.`idMember` = ? AND `MessageLogs`.`idServer` = ? AND `MessageLogs`.`sendTime` >= ?) as msgToday", [user.user.id, message.guild.id, user.user.id, message.guild.id, timeFormat.getTodayTimeStamp()], result => {
         userData.msgTotal = result[0].msgTotal;
