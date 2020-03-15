@@ -26,14 +26,14 @@ function _execute(message, args) {
         }
     }
 
-    db.query("SELECT DISTINCT(idMember) AS `member_id`, ( SELECT count(*) FROM `MessageLogs` WHERE `MessageLogs`.`idServer` = ? AND `MessageLogs`.`idMember` = `member_id` AND `MessageLogs`.`isDelete` = 0 AND `MessageLogs`.`sendTime` >= ? AND `MessageLogs`.`isAuthorBot` = 0 ) as `msgCount` FROM `MessageLogs` WHERE `MessageLogs`.`idServer` = ? AND `MessageLogs`.`isDelete` = 0 AND `MessageLogs`.`sendTime` >= ? AND `MessageLogs`.`isAuthorBot` = 0 ORDER BY `msgCount` DESC LIMIT 10", [message.guild.id, todayTimestamp, message.guild.id, todayTimestamp], result => {
+    db.query("SELECT DISTINCT(idMember) AS `member_id`, ( SELECT count(*) FROM `MessageLogs` WHERE `MessageLogs`.`idServer` = ? AND `MessageLogs`.`idMember` = `member_id` AND `MessageLogs`.`isDelete` = 0 AND `MessageLogs`.`sendTime` >= ?) as `msgCount` FROM `MessageLogs` WHERE `MessageLogs`.`idServer` = ? AND `MessageLogs`.`isDelete` = 0 AND `MessageLogs`.`sendTime` >= ? ORDER BY `msgCount` DESC LIMIT 10", [message.guild.id, todayTimestamp, message.guild.id, todayTimestamp], result => {
         result.forEach(row => {
             logResult.users.push(row);
         });
         logResult.stepCheck();
     })
 
-    db.query("SELECT count(*) FROM `MessageLogs` WHERE `MessageLogs`.`idServer` = ? AND `MessageLogs`.`sendTime` >= ? AND `MessageLogs`.`isAuthorBot` = 0;", [message.guild.id, todayTimestamp], result => {
+    db.query("SELECT count(*) FROM `MessageLogs` WHERE `MessageLogs`.`idServer` = ? AND `MessageLogs`.`sendTime` >= ?", [message.guild.id, todayTimestamp], result => {
         logResult.msgMembersTotal = result[0][`count(*)`];
         logResult.stepCheck();
     });
@@ -59,22 +59,23 @@ function _execute(message, args) {
 }
 
 function onDbWorkFinish(message, dbData) {
-    console.log(`tak`);
-
     let channelsStr = ``;
     dbData.channels.forEach((channel, channelIndex) => {
         channelsStr += `\`${channelIndex + 1}\`: <#${channel.channel_id}> - ${channel.msgCount}\n`; 
     })
+    if (channelsStr == ``) channelsStr = `Brak`;
 
     let usersStr = ``;
     dbData.users.forEach((user, userIndex) => {
         usersStr += `\`${userIndex + 1}\`: <@${user.member_id}> - ${user.msgCount}\n`; 
     })
+    if (usersStr == ``) usersStr = `Brak`;
 
     let botsStr = ``;
     dbData.bots.forEach((bot, botIndex) => {
         botsStr += `\`${botIndex + 1}\`: <@${bot.member_id}> - ${bot.msgCount}\n`; 
     })
+    if (botsStr == ``) botsStr = `Brak`;
 
     const logEmbed = new Discord.RichEmbed()
         .setTitle(op.direct(`dailyLogs`, `title`))

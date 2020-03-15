@@ -9,7 +9,11 @@ function _execute(message) {
     let sendTime = message.createdTimestamp;
     let isAuthorBot = message.author.bot;
 
-    if (messageContent.trim() == ``) return;
+    if (messageContent.trim() == ``) {
+        if (message.attachments) {
+            messageContent = message.attachments.first().url;
+        } else return;
+    }
 
     db.query("INSERT INTO `mrinba`.`MessageLogs` (idMessage, idServer, idChannel, idMember, messageContent, sendTime, isDelete, isAuthorBot) VALUES (?, ?, ?, ?, ?, ?, 0, ?) ON DUPLICATE KEY UPDATE idMessage=idMessage;",
             [idMessage, idServer, idChannel, idMember, messageContent, sendTime, isAuthorBot], 
