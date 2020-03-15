@@ -13,7 +13,7 @@ function _execute(message, args) {
         else {
             let user = undefined;
             let userNick = args[1];
-            if (args[1].match(/^<@!\d+>$/)) user = message.mentions.users.first();
+            if (args[1].match(/^<@!\d+>$/)) user = message.guild.members.find(member => member.user.id == message.mentions.users.first().id);
             else {
                 userNick = message.content.slice(botConfig.prefix.length + 1 + `logs`.length + 1);
                 user = message.guild.members.find(member => member.user.username == userNick) || message.guild.members.find(member => member.nickname == userNick);
