@@ -33,7 +33,7 @@ function _execute(message, args) {
         logResult.stepCheck();
     })
 
-    db.query("SELECT count(*) FROM `MessageLogs` WHERE `MessageLogs`.`idServer` = ? AND `MessageLogs`.`sendTime` >= ?", [message.guild.id, todayTimestamp], result => {
+    db.query("SELECT count(*) FROM `MessageLogs` WHERE `MessageLogs`.`idServer` = ? AND `MessageLogs`.`sendTime` >= ? AND `MessageLogs`.`isAuthorBot` = 0", [message.guild.id, todayTimestamp], result => {
         logResult.msgMembersTotal = result[0][`count(*)`];
         logResult.stepCheck();
     });
