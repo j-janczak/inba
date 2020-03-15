@@ -1,4 +1,8 @@
 module.exports = {
+    getTodayTimeStamp() {
+        let today = new Date();
+        return Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
+    },
     getDate(timeStamp) {
         let date = new Date(timeStamp);
         let hours = (date.getHours() < 10 ? `0${date.getHours()}` : date.getHours());

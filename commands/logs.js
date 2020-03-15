@@ -1,97 +1,28 @@
 const Discord = require('discord.js');
-const db = require(`../my_modules/database.js`);
+const botConfig = require(`../config/config.json`);
 const op = require(`../my_modules/inbaOutputs.js`);
 const sd = require(`../my_modules/simpleDiscord.js`);
-const timeFormat = require('../my_modules/timeFormat.js');
+const commands = require(`../my_modules/commands.js`);
+
+let logsCommands = commands.loadModules(`./commands/logs`);
 
 function _execute(message, args) {
-    let today = new Date();
-    let todayTimestamp = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
-
-    let logResult = {
-        channels: [],
-        users: [],
-        bots: [],
-        msgMembersTotal: 0,
-        msgBotsTotal: 0,
-        msgTotal: 0,
-        step: 0,
-        stepFinish: 5,
-        stepCheck: function() {
-            this.step++;
-            if (this.step == this.stepFinish) {
-                this.msgTotal = this.msgMembersTotal + this.msgBotsTotal;
-                onDbWorkFinish(message, this);
+    if (args.length > 1) {
+        const command = logsCommands.get(args[1]) || logsCommands.find(cmd => cmd.aliases && cmd.aliases.includes(args[1]));
+        if (command) command.execute(message, args);
+        else {
+            let user = undefined;
+            let userNick = args[1];
+            if (args[1].match(/^<@!\d+>$/)) user = message.mentions.users.first();
+            else {
+                userNick = message.content.slice(botConfig.prefix.length + 1 + `logs`.length + 1);
+                user = message.guild.members.find(member => member.user.username == userNick) || message.guild.members.find(member => member.nickname == userNick);
             }
+
+            if (user) logsCommands.get(`user`).execute(message, user);
+            else sd.send(message, sd.getEmbed(0, op.direct(`userLogs`, `errorCantFindUser`, [userNick])));
         }
     }
-
-    db.query("SELECT DISTINCT(idMember) AS `member_id`, ( SELECT count(*) FROM `MessageLogs` WHERE `MessageLogs`.`idServer` = ? AND `MessageLogs`.`idMember` = `member_id` AND `MessageLogs`.`isDelete` = 0 AND `MessageLogs`.`sendTime` >= ? AND `MessageLogs`.`isAuthorBot` = 0) as `msgCount` FROM `MessageLogs` WHERE `MessageLogs`.`idServer` = ? AND `MessageLogs`.`isDelete` = 0 AND `MessageLogs`.`sendTime` >= ? AND `MessageLogs`.`isAuthorBot` = 0 ORDER BY `msgCount` DESC LIMIT 10", [message.guild.id, todayTimestamp, message.guild.id, todayTimestamp], result => {
-        result.forEach(row => {
-            logResult.users.push(row);
-        });
-        logResult.stepCheck();
-    })
-
-    db.query("SELECT count(*) FROM `MessageLogs` WHERE `MessageLogs`.`idServer` = ? AND `MessageLogs`.`sendTime` >= ? AND `MessageLogs`.`isAuthorBot` = 0", [message.guild.id, todayTimestamp], result => {
-        logResult.msgMembersTotal = result[0][`count(*)`];
-        logResult.stepCheck();
-    });
-
-    db.query("SELECT DISTINCT(idMember) AS `member_id`, ( SELECT count(*) FROM `MessageLogs` WHERE `MessageLogs`.`idServer` = ? AND `MessageLogs`.`idMember` = `member_id` AND `MessageLogs`.`isDelete` = 0 AND `MessageLogs`.`sendTime` >= ? AND `MessageLogs`.`isAuthorBot` = 1 ) as `msgCount` FROM `MessageLogs` WHERE `MessageLogs`.`idServer` = ? AND `MessageLogs`.`isDelete` = 0 AND `MessageLogs`.`sendTime` >= ? AND `MessageLogs`.`isAuthorBot` = 1 ORDER BY `msgCount` DESC LIMIT 10", [message.guild.id, todayTimestamp, message.guild.id, todayTimestamp], result => {
-        result.forEach(row => {
-            logResult.bots.push(row);
-        });
-        logResult.stepCheck();
-    })
-
-    db.query("SELECT count(*) FROM `MessageLogs` WHERE `MessageLogs`.`idServer` = ? AND `MessageLogs`.`sendTime` >= ? AND `MessageLogs`.`isAuthorBot` = 1;", [message.guild.id, todayTimestamp], result => {
-        logResult.msgBotsTotal = result[0][`count(*)`];
-        logResult.stepCheck();
-    });
-
-    db.query("SELECT DISTINCT(idChannel) AS `channel_id`, (SELECT count(*) FROM `MessageLogs` WHERE `MessageLogs`.`idChannel` = `channel_id` AND `MessageLogs`.`isDelete` = 0 AND `MessageLogs`.`sendTime` >= ?) as `msgCount` FROM`MessageLogs` WHERE `MessageLogs`.`idServer` = ? AND `MessageLogs`.`isDelete` = 0 AND `MessageLogs`.`sendTime` >= ? ORDER BY `msgCount` DESC LIMIT 10", [todayTimestamp, message.guild.id, todayTimestamp], result => {
-        result.forEach(row => {
-            logResult.channels.push(row);
-        });
-        logResult.stepCheck();
-    })
-}
-
-function onDbWorkFinish(message, dbData) {
-    let channelsStr = ``;
-    dbData.channels.forEach((channel, channelIndex) => {
-        channelsStr += `\`${channelIndex + 1}\`: <#${channel.channel_id}> - ${channel.msgCount}\n`; 
-    })
-    if (channelsStr == ``) channelsStr = `Brak`;
-
-    let usersStr = ``;
-    dbData.users.forEach((user, userIndex) => {
-        usersStr += `\`${userIndex + 1}\`: <@${user.member_id}> - ${user.msgCount}\n`; 
-    })
-    if (usersStr == ``) usersStr = `Brak`;
-
-    let botsStr = ``;
-    dbData.bots.forEach((bot, botIndex) => {
-        botsStr += `\`${botIndex + 1}\`: <@${bot.member_id}> - ${bot.msgCount}\n`; 
-    })
-    if (botsStr == ``) botsStr = `Brak`;
-
-    const logEmbed = new Discord.RichEmbed()
-        .setTitle(op.direct(`dailyLogs`, `title`))
-        .setDescription(op.direct(`dailyLogs`, `desc`, [message.guild.name]))
-        .setThumbnail(message.guild.iconURL)
-        .setColor(`#B0E0E6`)
-        .addField(`Te kanały dziś rządziły`, channelsStr, true)
-        .addField(`Wiadomości ogółem`, dbData.msgTotal, true)
-        .addBlankField(false)
-        .addField(`Najaktywniejsi`, usersStr, true)
-        .addField(`Wiadomości użyszkodników`, dbData.msgMembersTotal, true)
-        .addBlankField(false)
-        .addField(`moksori i reszta`, botsStr, true)
-        .addField(`azjatki i reszta`, dbData.msgBotsTotal, true)
-        .setTimestamp();
-    message.channel.send(logEmbed);
 }
 
 module.exports = {
@@ -100,96 +31,12 @@ module.exports = {
     execute(message, args) {_execute(message, args)}
 }
 
-/*  ------Select unique channels from server with message count------
-    SELECT 
-        DISTINCT(idChannel) AS `channel_id`,
-        (
-            SELECT 
-                count(*) 
-            FROM 
-                `MessageLogs` 
-            WHERE 
-                `MessageLogs`.`idChannel` = `channel_id` AND
-                `MessageLogs`.`isDelete` = 0 AND
-                `MessageLogs`.`sendTime` >= 1584144000000 AND
-                `MessageLogs`.`isAuthorBot` = 0
-        ) as `msgCount`
-    FROM 
-        `MessageLogs`
-    WHERE 
-        `MessageLogs`.`idServer` = '616029849882066959' AND
-        `MessageLogs`.`isDelete` = 0 AND
-        `MessageLogs`.`sendTime` >= 1584144000000 AND
-        `MessageLogs`.`isAuthorBot` = 0
-    ORDER BY
-        `msgCount`
-        DESC
-    LIMIT 
-        10
-*/
-
-/*  ------Select unique members from server with message count------
-    SELECT
-        DISTINCT(idMember) AS `member_id`,
-        (
-            SELECT
-                count(*)
-            FROM
-                `MessageLogs`
-            WHERE
-				`MessageLogs`.`idServer` = '616029849882066959' AND
-                `MessageLogs`.`idMember` = `member_id` AND
-                `MessageLogs`.`isDelete` = 0 AND
-                `MessageLogs`.`sendTime` >= 1584144000000 AND
-                `MessageLogs`.`isAuthorBot` = 0
-        ) as `msgCount`
-    FROM
-        `MessageLogs`
-    WHERE
-        `MessageLogs`.`idServer` = '616029849882066959' AND
-        `MessageLogs`.`isDelete` = 0 AND
-        `MessageLogs`.`sendTime` >= 1584144000000 AND
-        `MessageLogs`.`isAuthorBot` = 0
-    ORDER BY
-        `msgCount`
-        DESC
-    LIMIT
-        10
-*/
-
-/*  ------Select unique bots from server with message count------
-	SELECT
-        DISTINCT(idMember) AS `member_id`,
-        (
-            SELECT
-                count(*)
-            FROM
-                `MessageLogs`
-            WHERE
-				`MessageLogs`.`idServer` = '616029849882066959' AND
-                `MessageLogs`.`idMember` = `member_id` AND
-                `MessageLogs`.`isDelete` = 0 AND
-                `MessageLogs`.`sendTime` >= 1584144000000 AND
-                `MessageLogs`.`isAuthorBot` = 1
-        ) as `msgCount`
-    FROM
-        `MessageLogs`
-    WHERE
-        `MessageLogs`.`idServer` = '616029849882066959' AND
-        `MessageLogs`.`isDelete` = 0 AND
-        `MessageLogs`.`sendTime` >= 1584144000000 AND
-        `MessageLogs`.`isAuthorBot` = 1
-    ORDER BY
-        `msgCount`
-        DESC
-    LIMIT
-        10
-*/
-
-/*  ------Select messages count from users------
-    SELECT count(*) FROM `MessageLogs` WHERE `MessageLogs`.`idServer` = '616029849882066959' AND `MessageLogs`.`sendTime` >= 1584144000000 AND `MessageLogs`.`isAuthorBot` = 0;
-*/
-
-/*  ------Select messages count from bots------
-    SELECT count(*) FROM `MessageLogs` WHERE `MessageLogs`.`idServer` = '616029849882066959' AND `MessageLogs`.`sendTime` >= 1584144000000 AND `MessageLogs`.`isAuthorBot` = 1;
+/*
+const helpEmbed = new Discord.RichEmbed()
+            .setAuthor(`Inba Manual`)
+            .setTitle(`Logs`)
+            .addField(`**\`\`!mi logs @user\`\`**`, `Wyświetla logi danego użytkownika`)
+            .addField(`**\`\`!mi role server\`\`**`, `Wyświetla statystyki serwera z obecnego dnia`)
+            .setColor(`#ff7f50`);
+        sd.send(message, helpEmbed);
 */

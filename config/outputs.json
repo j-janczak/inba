@@ -131,6 +131,9 @@
         "title": "Co to był za spam!",
         "desc": "Czyli podsumowanie dnia na serwerze **%s**"
     },
+    "userLogs": {
+        "errorCantFindUser": "I can't find the \"%s\" member"
+    },
     "help": {
         "embed": [
             "Legend:",
