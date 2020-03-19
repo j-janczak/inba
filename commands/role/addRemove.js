@@ -74,10 +74,3 @@ module.exports = {
         }
     }
 };
-
-db.serverEvents.on(`removeRole`, (server, member, role) => {
-    setImmediate(() => {
-        member.removeRole(role)
-        .catch(console.error);
-    });
-});

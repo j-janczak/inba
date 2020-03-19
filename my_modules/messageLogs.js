@@ -11,7 +11,8 @@ function _execute(message) {
 
     if (messageContent.trim() == ``) {
         if (message.attachments) {
-            messageContent = message.attachments.first().url;
+            if (message.attachments.first() !== undefined)
+                messageContent = message.attachments.first().url;
         } else return;
     }
 

@@ -5,7 +5,8 @@ const sd = require(`../my_modules/simpleDiscord.js`);
 const permissions = require(`./checkPermission.js`);
 
 function onMemberRemove(member) {
-    db.query("SELECT leaveMessage, logMessagesChannelID FROM servers where serverID = ?", [member.guild.id], result => {
+    db.query("SELECT leaveMessage FROM servers where serverID = ?", [member.guild.id], result => {
+        console.log(`DX`);
         if (result.length == 1) {
             if(result[0].leaveMessage !== null && result[0].leaveMessage !== undefined) 
                 member.guild.channels.find(channel => channel.id === member.guild.systemChannelID).send(result[0].leaveMessage.replace(`%u`, `\`\`${member.user.tag}\`\``));

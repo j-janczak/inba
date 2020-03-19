@@ -20,6 +20,4 @@ module.exports = {
             sd.send(message, helpEmbed);
         }
     },
-    taskTakeAwayRole(member, roleID) {roleCommands.get(`remove`).taskTakeAwayRole(member, roleID)},
-    onMemberAdd(member) {roleCommands.get(`add`).onMemberAdd(member)}
 };

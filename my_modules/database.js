@@ -2,9 +2,6 @@ const {client, clientEmiter}  = require(`../my_modules/discordClient.js`);
 const EventEmitter = require('events');
 const mysql = require(`mysql`);
 
-class ServerEvents extends EventEmitter {}
-const _serverEvents = new ServerEvents();
-
 var _db = mysql.createPool({
 	connectionLimit : 10,
 	host: `185.238.72.95`,
@@ -57,7 +54,6 @@ function pingToDB() {
 }
 
 module.exports = {
-	serverEvents: _serverEvents,
 	query(q, v, callback) {_query(q, v, callback);}
 };
 

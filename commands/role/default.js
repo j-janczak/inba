@@ -6,6 +6,7 @@ const op = require(`../../my_modules/inbaOutputs.js`);
 const permissions = require(`../checkPermission.js`);
 
 function onMemberAdd(member) {
+    console.log(`xD`);
     db.query("SELECT `servers`.`defaultRole` FROM `servers` WHERE `servers`.`serverID` = ?", [member.guild.id], result => {
         if (result.length == 1) {
             let roles = JSON.parse(result[0].defaultRole);

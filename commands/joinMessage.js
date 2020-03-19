@@ -5,7 +5,8 @@ const sd = require(`../my_modules/simpleDiscord.js`);
 const permissions = require(`./checkPermission.js`);
 
 function onMemberAdd(member) {
-    db.query("SELECT joinMessage, logMessagesChannelID FROM servers where serverID = ?", [member.guild.id], result => {
+    db.query("SELECT joinMessage FROM servers where serverID = ?", [member.guild.id], result => {
+        console.log(`XD`);
         if (result.length == 1) {
             if(result[0].joinMessage !== null && result[0].joinMessage !== undefined) 
                 member.guild.channels.find(channel => channel.id === member.guild.systemChannelID).send(result[0].joinMessage.replace(`%u`, `<@${member.id}>`));
