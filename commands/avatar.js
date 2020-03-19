@@ -18,11 +18,14 @@ module.exports = {
             image = message.guild.iconURL;
         } else {
             let member = sd.getMember(message, this.name, args[1]);
-            console.log(member);
+            if (member == null || member === undefined) {
+                sd.send(message, sd.getEmbed(0, op.direct(`mainErrors`, `userNotFound`, [args[1]])));
+                return;
+            }
             title = `@${member.displayName}`;
             desc = op.direct(`avatar`, `user_avatar`);
             color = member.displayHexColor;
-            image = member.user.avatarURL
+            image = member.user.avatarURL;
         }
         const iconEmbed = new Discord.RichEmbed()
             .setTitle(title)

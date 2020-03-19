@@ -1,4 +1,7 @@
 {
+    "mainErrors" : {
+        "userNotFound": "I can't find a member with the nick `%s`"
+    },
     "ping": [
         "Wciąż jestem w becie",
         "GDZIE JEST SERWER MINECRAFTA?",
