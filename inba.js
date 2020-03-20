@@ -9,64 +9,31 @@ const colors = require('colors');
 client.commands = commands.loadModules(`./commands`);
 
 client.once(`ready`, () => {
-    client.user.setActivity(`Type !mi help`, {type: `PLAYING`});
-    console.log(`Inba powstał! - ${client.guilds.size} serwerów 🖥`.gray);
-    client.guilds.forEach(g => {console.log(g.name.gray)});
+    client.user.setActivity(`Type !mi help`);
+    console.log(`Inba powstał! - ${client.guilds.cache.size} serwerów 🖥`.gray);
+    client.guilds.cache.forEach(g => {console.log(g.name.gray)});
 });
 
 client.on(`message`, message => {
     if (message.author.id == client.user.id) return;
-    if (message.channel.type == `dm`) {
-        return;
-    }
-
-    if (message.channel.type == `text` && message.author.id != `670186603607621633`) messageLogs.execute(message);
 
     console.log(`·`.brightGreen, `${message.member.displayName}`.cyan, `in`.grey, `${message.guild.name}`.cyan, `at`.grey, `#${message.channel.name}:`.cyan, `${message.content}`);
     
     if (!message.content.startsWith(botConfig.prefix)) return;
-
-    let args = message.content.slice(botConfig.prefix.length + 1).toLowerCase().split(/ +/);
-	if(args[0] == ``) args = [];
-	const userCommand = args[0]
-
-	let prefixSearch = `^${botConfig.prefix} `;
-	let prefixRegEx = new RegExp(prefixSearch, `g`);
+    
+	let prefixRegEx = new RegExp(`^${botConfig.prefix} `, `g`);
 
 	if (message.content == botConfig.prefix) sd.send(message, op.random(`ping`));
     else if (message.content.match(prefixRegEx)) {
+        let args = message.content.slice(botConfig.prefix.length + 1).split(/ +/);
+        if(args[0] == ``) args = [];
+        const userCommand = args[0].toLowerCase();
+
         const command = client.commands.get(userCommand) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(userCommand));
-        if(command) command.execute(message, args);
-        else if (userCommand === `autoit`) {
-            sd.send(message, `posysa`);
-        } else if (userCommand === `kris`) {
-            sd.send(message, `to kryptogej`);
-        } else if (userCommand === `mihaszek`) {
-            sd.send(message, `to penis`);
-        } else if (userCommand === `alex`) {
-            sd.send(message, `Izrael powinien przejąć tereny należące do Palestyny.`);
-        } else if (userCommand === `mssc`) {
-            sd.send(message, `oddaj hajs krisowi`);
-        } else if (userCommand === `revox`) {
-            sd.send(message, `:R:`);
-        } else if (userCommand === `kuba`) {
-            sd.send(message, `android to dystrybucja linuxa`);
-        } else if (userCommand === `alina`) {
-            sd.send(message, `napraw mi vpsa`);
-        } else if (userCommand === `majkel`) {
-            sd.send(message, `**to cie**kawy chłopak jest`);
-        } else if (userCommand === `złomek`) {
-            sd.send(message, `stop adminofaszyzmowi`);
-        } else if (userCommand === `ptak`) {
-            sd.send(message, `przestań mi wysyłać skośnookie na pw`);
-        } else if (userCommand === `wiktor`) {
-            sd.send(message, `nie znam type choć podobno znam`);
-        } else if (userCommand === `carl-bot`) {
-            sd.send(message, `To podbot w dodatku nas szpieguje`);
-        } else if (userCommand === `wracaj`) {
-            sd.send(message, `Nie chcę wracać do tych pojebów`);
-        } else {
-            sd.send(message, op.random(`commandNotFound`));
+        if (command) command.execute(message, args);
+        else {
+            sd.send(message, `nada`);
+            //TODO
         }
     }
 });
