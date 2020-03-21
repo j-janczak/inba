@@ -1,7 +1,5 @@
 const {client, clientEmiter} = require(`./my_modules/discordClient.js`);
 const botConfig = require(`./config/config.json`);
-const sd = require(`./my_modules/simpleDiscord.js`);
-const op = require(`./my_modules/inbaOutputs.js`);
 const commands = require(`./my_modules/commands.js`);
 const messageLogs = require(`./my_modules/messageLogs.js`);
 const colors = require('colors');
@@ -23,7 +21,7 @@ client.on(`message`, message => {
     
 	let prefixRegEx = new RegExp(`^${botConfig.prefix} `, `g`);
 
-	if (message.content == botConfig.prefix) sd.send(message, op.random(`ping`));
+	if (message.content == botConfig.prefix) ;//sd.send(message, op.random(`ping`));
     else if (message.content.match(prefixRegEx)) {
         let args = message.content.slice(botConfig.prefix.length + 1).split(/ +/);
         if(args[0] == ``) args = [];
@@ -32,7 +30,7 @@ client.on(`message`, message => {
         const command = client.commands.get(userCommand) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(userCommand));
         if (command) command.execute(message, args);
         else {
-            sd.send(message, `nada`);
+            //sd.send(message, `nada`);
             //TODO
         }
     }

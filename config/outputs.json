@@ -7,7 +7,11 @@
     "typical": {
         "error": {
             "memberNotFound": "No member found with the given nick"
-        }
+        },
+        "embed": {
+            "footer": "At %s request"
+        },
+        "unknownCommand": "Unknown command, check `!mi %s help`"
     },
     "wellFarMessage": {
         "add": {
@@ -40,8 +44,7 @@
                 "notFound": "No message found with the given ID"
             },
             "success": "Message deleted"
-        },
-        "unknownCommand": "Unknown command, check `!mi %s help`"
+        }
     },
     "avatar": {
         "embed": {
@@ -54,9 +57,45 @@
             "footer": "At %s request"
         }
     },
-    "kick": {
+    "banKick": {
         "noReason": "No reason",
-        "success": "%s has been kicked out",
-        "error": "Error! Most likely, I don't have permission to kick users"
+        "success": {
+            "0": "`%s` has been banned\n\n__Reason:__\n%s",
+            "1": "`%s` has been kicked out\n\n__Reason:__\n%s"
+        },
+        "error": "Error! Most likely, I don't have permission to %s users"
+    },
+    "role": {
+        "error": {
+            "notFound": "No role found with the given name"
+        },
+        "add": {
+            "success": "The role %s was successfully assigned to user %s",
+            "error": {
+                "missingPerm": "I don't have permission to assign roles or the role you gave have higher rank than me",
+                "alreadyOwns": "%s already has %s role",
+                "other": "An error occurred while assigning the role"
+            }
+        },
+        "remove": {
+            "success": "Successfully removed the %s role for the user %s",
+            "error": {
+                "missingPerm": "I don't have permission to remove roles or the role you gave have higher rank than me",
+                "alreadyOwns": "%s has no %s role",
+                "other": "An error occurred while removing the role"
+            }
+        },
+        "info": {
+            "desc": "Role information",
+            "members": "Members",
+            "position": "Position",
+            "mention": "Mentionable",
+            "create": "Created at",
+            "perm": "Permissions"
+        },
+        "list": {
+            "title": "Role List",
+            "desc": "on the **%s** server"
+        }
     }
 }

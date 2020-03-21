@@ -1,0 +1,142 @@
+const CommandTemplate = require(`../my_modules/CommandTemplate.js`);
+const timeFormat = require(`../my_modules/timeFormat.js`);
+const botConfig = require(`../config/config.json`);
+const Discord = require(`discord.js`);
+
+class Role extends CommandTemplate{
+    constructor(msg, args) {
+        super(msg, args);
+        this.member;
+        this.role;
+
+        if (args.length < 2) {
+            this.sendHelp();
+            return;
+        }
+
+        if (args[1].toLowerCase() == `add`) this.parseRole(`add`);
+        else if (args[1].toLowerCase() == `remove`) this.parseRole(`remove`);
+        else if (args[1].toLowerCase() == `info`) this.parseRole(`info`);
+        else if (args[1].toLowerCase() == `list`) this.list();
+        else if (args[1].toLowerCase() == `help`) this.sendHelp();
+        else this.sendEmbed(0, this.getString(`typical`, `unknownCommand`, [`role`]));
+    }
+    parseRole(type) {
+        this.role = (type == `info` ? this.getRole(2) : this.getRole(3));
+        if (!this.role) {
+            this.sendEmbed(0, this.getString(`role`, `error`, `notFound`));
+            return;
+        }
+        if (type == `add` || type == `remove`) this.parseMember(type);
+        else if (type == `info`) this.info();
+    }
+    parseMember(type) {
+        this.member = this.getMember(2);
+        if (!this.member) {
+            this.sendEmbed(0, this.getString(`typical`, `error`, `memberNotFound`));
+            return;
+        }
+        if (type == `add`) this.add();
+        else if (type == `remove`) this.remove();
+    }
+    add() {
+        if (!this.checkPermission()) return;
+        if (this.member.roles.cache.find(r => r.id == this.role.id)) {
+            this.sendEmbed(2, this.getString(`role`, `add`, `error`, `alreadyOwns`, [`<@!${this.member.id}>`, `<@&${this.role.id}>`]));
+            return;
+        }
+
+        this.member.roles.add(this.role).then(m => {
+            this.sendEmbed(1, this.getString(`role`, `add`, `success`, [`<@&${this.role.id}>`, `<@!${this.member.user.id}>`]));
+        }).catch(e => {
+            console.error(e);
+            if (e.code == 50013) {
+                this.sendEmbed(0, this.getString(`role`, `add`, `error`, `missingPerm`));
+            }
+            else this.sendEmbed(0, this.getString(`role`, `add`, `error`, `other`));
+        })
+    }
+    remove() {
+        if (!this.checkPermission()) return;
+        if (!this.member.roles.cache.find(r => r.id == this.role.id)) {
+            this.sendEmbed(2, this.getString(`role`, `remove`, `error`, `alreadyOwns`, [`<@!${this.member.id}>`, `<@&${this.role.id}>`]));
+            return;
+        }
+
+        this.member.roles.remove(this.role).then(m => {
+            this.sendEmbed(1, this.getString(`role`, `remove`, `success`, [`<@&${this.role.id}>`, `<@!${this.member.user.id}>`]));
+        }).catch(e => {
+            console.error(e);
+            if (e.code == 50013) {
+                this.sendEmbed(0, this.getString(`role`, `remove`, `error`, `missingPerm`));
+            }
+            else this.sendEmbed(0, this.getString(`role`, `remove`, `error`, `other`));
+        })
+    }
+    info() {
+        const perms = new Discord.Permissions(this.role.permissions);
+        let permsString = (this.role.permissions == 0 ? `None` : ``);
+        perms.toArray().forEach(p => {
+            p = p.split(`_`).join(` `);
+            p = p.slice(0, 1) + p.slice(1).toLowerCase();
+            permsString += `· ${p}\n`
+        });
+
+        console.log(this.role.calculatedPosition);
+
+        let roleEmbed = new Discord.MessageEmbed()
+            .setTitle(this.role.name)
+            .setDescription(this.getString(`role`, `info`, `desc`))
+            .addField(this.getString(`role`, `info`, `members`), this.role.members.size, true)
+            .addField(this.getString(`role`, `info`, `position`), `${Math.abs(this.role.position - this.msg.guild.roles.cache.size)}`, true)
+            .addField(this.getString(`role`, `info`, `mention`), `${this.role.mentionable}`.slice(0, 1).toUpperCase() + `${this.role.mentionable}`.slice(1).toLowerCase(), true)
+            .addField(this.getString(`role`, `info`, `create`), timeFormat.getDate(this.role.createdTimestamp), false)
+            .addField(this.getString(`role`, `info`, `perm`), permsString, false)
+            .setColor(this.role.hexColor)
+            .setFooter(this.getString(`typical`, `embed`, `footer`, [this.msg.member.displayName]));
+        this.send(roleEmbed);
+    }
+    list() {
+        let rolesStr = this.getString(`role`, `list`, `desc`, [this.msg.guild.name]) + `\n\n`;
+        for(let i = this.msg.guild.roles.cache.size - 1; i >= 0; i--)
+            rolesStr += `*\`${Math.abs(i - this.msg.guild.roles.cache.size)}\`*. ${this.msg.guild.roles.cache.find(r => r.position == i).name}\n`;
+        
+        const rolesEmbed = new Discord.MessageEmbed()
+            .setTitle(this.getString(`role`, `list`, `title`))
+            .setDescription(rolesStr)
+            .setColor(botConfig.botColor)
+            .setFooter(this.getString(`typical`, `embed`, `footer`, [`${this.msg.member.displayName}`]));
+        this.send(rolesEmbed);
+    }
+    sendHelp() {
+        let descMsg = `
+            \`${botConfig.prefix} ${this.args[0]} add <@user> <@role>\` - Assigns a role to user
+            \`${botConfig.prefix} ${this.args[0]} remove <@user> <@role>\` - Removes the role
+            \`${botConfig.prefix} ${this.args[0]} info <@role>\` - Shows info about the role
+            \`${botConfig.prefix} ${this.args[0]} list\` - Shows all roles
+            \`${botConfig.prefix} ${this.args[0]} help\` - You're here
+        `;
+        let embed = new Discord.MessageEmbed()
+            .setAuthor(`Mr. Inba Manual`)
+            .setTitle(`Role`)
+            .setDescription(descMsg)
+            .setColor(botConfig.botColor);
+        this.send(embed);
+    }
+    getRole(argIndex) {
+        let role;
+        if (this.msg.mentions.roles.size) {
+            let roleMentionRegEx = new RegExp(/^<@&(\d+)>$/).exec(this.args[argIndex]);
+            if (roleMentionRegEx != null && roleMentionRegEx !== undefined) {
+                role = this.msg.guild.roles.cache.find(r => r.id == roleMentionRegEx[1]);
+            }
+        }
+        else role = this.msg.guild.roles.cache.find(r => r.name == this.args[argIndex]);
+        return role;
+    }
+}
+
+module.exports = {
+    name: `role`,
+    execute(msg, args) {new Role(msg, args)}
+}
