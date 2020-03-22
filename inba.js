@@ -13,6 +13,7 @@ client.once(`ready`, () => {
 });
 
 client.on(`message`, message => {
+    
     if (message.author.id == client.user.id) return;
 
     console.log(`·`.brightGreen, `${message.member.displayName}`.cyan, `in`.grey, `${message.guild.name}`.cyan, `at`.grey, `#${message.channel.name}:`.cyan, `${message.content}`);

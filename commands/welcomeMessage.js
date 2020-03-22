@@ -14,7 +14,7 @@ class WelcomeMsg extends CommandTemplate {
             return;
         }
 
-        this.action = tjargs[1].toLowerCase();
+        this.action = this.args[1].toLowerCase();
         if (this.action == `add`) this.addMsg();
         else if (this.action == `list`) this.list();
         else if (this.action == `remove`) this.remove();
@@ -99,7 +99,7 @@ class WelcomeMsg extends CommandTemplate {
             .setAuthor(`Mr. Inba Manual`)
             .setTitle(`welcomeMessage/farewellMessage`)
             .setDescription(descMsg)
-            .setColor(`#6fadc7`);
+            .setColor(botConfig.botColor);
         this.send(embed);
     }
 }

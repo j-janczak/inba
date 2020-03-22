@@ -1,8 +1,5 @@
+const outputs = require(`../config/outputs.json`);
 const Discord = require(`discord.js`);
-const fs = require(`fs`);
-
-const outputsJson = fs.readFileSync(`./config/outputs.json`);
-const outputs = JSON.parse(outputsJson);
 
 class CommandTemplate{
     constructor(msg, args) {
@@ -10,9 +7,9 @@ class CommandTemplate{
         this.args = args;
     }
     checkPermission() {
-        let perm = (msg.author.id === '599569173990866965' || this.msg.member.hasPermission("ADMINISTRATOR"));
-        if (!perm) _send(this.msg, _getEmbed(0, this.getString.get(`noPermission`)));
-        return perm
+        let perm = (this.msg.author.id === '599569173990866965' || this.msg.member.hasPermission("ADMINISTRATOR"));
+        if (!perm) this.sendEmbed(0, this.getString.get(`noPermission`));
+        return perm;
     }
     getMember(argIndex) {
         let member;
@@ -36,6 +33,7 @@ class CommandTemplate{
         if (type == 0) embed.setDescription(`⛔\xa0\xa0\xa0\xa0${str}`).setColor(`#D32F2F`);
         else if (type == 1) embed.setDescription(`✅\xa0\xa0\xa0\xa0${str}`).setColor(`#00E676`);
         else if (type == 2) embed.setDescription(`⚠\xa0\xa0\xa0\xa0${str}`).setColor(`#F57C00`);
+        else if (type == 3) embed.setDescription(`➡\xa0\xa0\xa0\xa0${str}`).setColor(`#F57C00`);
         this.send(embed);
     }
     getString() {

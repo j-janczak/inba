@@ -1,8 +1,6 @@
-const fs = require(`fs`);
-const outputsJson = fs.readFileSync(`./config/outputs.json`);
-const outputs = JSON.parse(outputsJson);
+const outputs = require(`../config/outputs.json`);
 
-function _get(args) {
+function get(args) {
     let values;
     let skip;
     if (Array.isArray(args[Object.keys(args)[Object.keys(args).length - 1]])) {
@@ -28,5 +26,5 @@ function _get(args) {
 }
 
 module.exports = {
-    get() {return _get(arguments)}
+    get
 };

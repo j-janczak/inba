@@ -97,5 +97,32 @@
             "title": "Role List",
             "desc": "on the **%s** server"
         }
+    },
+    "color": {
+        "init": {
+            "error": "An error occurred while creating roles! Most likely, I don't have permission to manage roles.",
+            "success": "Successfully created %s roles",
+            "warning": "This server already has all the colorful roles"
+        },
+        "cleanup": {
+            "error": "An error occurred while deleting roles! Most likely, I don't have permission to manage roles.",
+            "success": "Successfully deleted %s roles",
+            "warning": "This server has no colorful roles"
+        },
+        "set": {
+            "error": {
+                "notFound": "No color named `%s` found, check `%s color list`",
+                "notAssigned": "An error occurred while assigning role! Most likely, I don't have permission to manage roles.",
+                "notRoleFound": "The color is correct but no role found. Ask the administration to use the `%s color init` command"
+            },
+            "warning": {
+                "alreadyOwns": "Your nickname already has a %s color"
+            },
+            "success": "Your nick has now %s color"
+        },
+        "remove": {
+            "success": "Your nick no longer has a color",
+            "warning": "You don't have a colored nick"
+        }
     }
 }

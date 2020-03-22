@@ -1,0 +1,23 @@
+{
+    "prefix": "[Inba] ",
+    "colors": {
+        "AliceBlue": "#F0F8FF",
+        "PowderBlue": "#B0E0E6",
+        "Bisque": "#FFE4C4",
+        "Coral": "#FF7F50",
+        "IndianRed": "#CD5C5C",
+        "Aqua": "#00FFFF",
+        "CornflowerBlue": "#6495ED",
+        "DeepSkyBlue": "#00BFFF",
+        "DodgerBlue": "#1E90FF",
+        "Plum": "#DDA0DD",
+        "Violet": "#EE82EE",
+        "Fuchsia": "#FF00FF",
+        "Yellow" : "#FFFF00",
+        "Gold": "#FFD700",
+        "Turquoise": "#40E0D0",
+        "SpringGreen": "#00FF7F",
+        "PaleGreen": "#98FB98",
+        "Aquamarine": "#7FFFD4"
+    }
+}
