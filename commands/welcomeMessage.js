@@ -7,7 +7,7 @@ const Discord = require(`discord.js`);
 class WelcomeMsg extends CommandTemplate {
     constructor(msg, args) {
         super(msg, args);
-        this.type = (this.args[0].toLowerCase() == `welcomemessage` ? 0 : 1);
+        this.type = ((this.args[0].toLowerCase() == `welcomemessage` || this.args[0].toLowerCase() == `wm`) ? 0 : 1);
 
         if (this.args.length < 2) {
             this.sendHelp();
@@ -118,6 +118,6 @@ clientEmiter.on(`memberLeft`, async (member) => {onMemberAction(member, 1)});
 
 module.exports = {
     name: `welcomemessage`,
-    aliases: [`farewellmessage`],
+    aliases: [`wm`, `farewellmessage`, `fm`],
     execute(msg, args) {new WelcomeMsg(msg, args)}
 }

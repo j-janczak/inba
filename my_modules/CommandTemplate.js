@@ -23,6 +23,17 @@ class CommandTemplate{
         }
         return member;
     }
+    getRole(argIndex) {
+        let role;
+        if (this.msg.mentions.roles.size) {
+            let roleMentionRegEx = new RegExp(/^<@&(\d+)>$/).exec(this.args[argIndex]);
+            if (roleMentionRegEx != null && roleMentionRegEx !== undefined) {
+                role = this.msg.guild.roles.cache.find(r => r.id == roleMentionRegEx[1]);
+            }
+        }
+        else role = this.msg.guild.roles.cache.find(r => r.name == this.args[argIndex]);
+        return role;
+    }
     send(str, callback = null) {
         this.msg.channel.send(str)
         .then(m => {if(callback) callback(m)})

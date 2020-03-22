@@ -61,6 +61,6 @@ class Avatar extends CommandTemplate {
 
 module.exports = {
     name: `avatar`,
-    aliases: [`icon`],
+    aliases: [`icon`, `av`],
     execute(msg, args) {new Avatar(msg, args)}
 }

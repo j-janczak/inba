@@ -130,5 +130,6 @@ class Color extends CommandTemplate {
 
 module.exports = {
     name: `color`,
+    aliases: [`c`],
     execute(msg, args) {new Color(msg, args)}
 }

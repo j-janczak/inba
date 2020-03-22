@@ -11,7 +11,7 @@ pool.getConnection()
 		console.log("Not connected due to error: " + err);
 	});
 
-async function _query(query, values = null) {
+async function query(query, values = null) {
 	let conn;
 	let rows;
 	try {
@@ -28,5 +28,5 @@ async function _query(query, values = null) {
 }
 
 module.exports = {
-	async query(query, values = null) {return _query(query, values)}
+	query
 }

@@ -12,28 +12,29 @@ client.once(`ready`, () => {
     client.guilds.cache.forEach(g => {console.log(g.name.gray)});
 });
 
-client.on(`message`, message => {
-    
-    if (message.author.id == client.user.id) return;
+client.on(`message`, msg => {
+    if (msg.author.id == client.user.id) return;
 
-    console.log(`·`.brightGreen, `${message.member.displayName}`.cyan, `in`.grey, `${message.guild.name}`.cyan, `at`.grey, `#${message.channel.name}:`.cyan, `${message.content}`);
+    console.log(`•`.brightGreen, `${msg.member.displayName}`.cyan, `in`.grey, `${msg.guild.name}`.cyan, `at`.grey, `#${msg.channel.name}:`.cyan, `${msg.content}`);
     
-    if (!message.content.startsWith(botConfig.prefix)) return;
+    if (!msg.content.startsWith(botConfig.prefix)) return;
+    if (msg.content == botConfig.prefix) return;//sd.send(message, op.random(`ping`));
     
-	let prefixRegEx = new RegExp(`^${botConfig.prefix} `, `g`);
+    let prefixRegEx = new RegExp(`^${botConfig.prefix} `, `g`);
+    if (!msg.content.match(prefixRegEx)) return;
 
-	if (message.content == botConfig.prefix) ;//sd.send(message, op.random(`ping`));
-    else if (message.content.match(prefixRegEx)) {
-        let args = message.content.slice(botConfig.prefix.length + 1).split(/ +/);
-        if(args[0] == ``) args = [];
-        const userCommand = args[0].toLowerCase();
+    let quotePatt = new RegExp(/(?: "([^"\n]+)")|(?: ([^"\n ]+))/g);
+    let args = [];
+    let result;
+    while (result = quotePatt.exec(` ${msg.content.slice(botConfig.prefix.length + 1)}`)) {
+        args.push(result[1] ? result[1] : result[2]);
+    }
 
-        const command = client.commands.get(userCommand) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(userCommand));
-        if (command) command.execute(message, args);
-        else {
-            //sd.send(message, `nada`);
-            //TODO
-        }
+    const command = client.commands.get(args[0].toLowerCase()) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(args[0].toLowerCase()));
+    if (command) command.execute(msg, args);
+    else {
+        //sd.send(message, `nada`);
+        //TODO
     }
 });
 

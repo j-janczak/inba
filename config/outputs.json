@@ -6,7 +6,9 @@
     ],
     "typical": {
         "error": {
-            "memberNotFound": "No member found with the given nick"
+            "memberNotFound": "No member found with the given nick",
+            "noRoleFound": "No role named `%s` found",
+            "dbError": "An error occurred while processing the query by the database"
         },
         "embed": {
             "footer": "At %s request"
@@ -66,9 +68,6 @@
         "error": "Error! Most likely, I don't have permission to %s users"
     },
     "role": {
-        "error": {
-            "notFound": "No role found with the given name"
-        },
         "add": {
             "success": "The role %s was successfully assigned to user %s",
             "error": {
@@ -123,6 +122,22 @@
         "remove": {
             "success": "Your nick no longer has a color",
             "warning": "You don't have a colored nick"
+        }
+    },
+    "defaultRoles": {
+        "add": {
+            "success": "The %s role has been successfully added to the default roles",
+            "error": {
+                "roleDuplicate": "The %s role is already added to the default roles",
+                "tooMany": "You cannot set more than 10 default roles"
+            }
+        },
+        "remove": {
+            "success": "The %s role is no longer the default role",
+            "error": "The %s role wasn't the default role"
+        },
+        "list": {
+            "success": "Default roles on this server:\n\n%s"
         }
     }
 }

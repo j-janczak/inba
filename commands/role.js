@@ -24,7 +24,8 @@ class Role extends CommandTemplate{
     parseRole(type) {
         this.role = (type == `info` ? this.getRole(2) : this.getRole(3));
         if (!this.role) {
-            this.sendEmbed(0, this.getString(`role`, `error`, `notFound`));
+            let roleName = (type == `info` ? this.args[2] : this.args[3]).replace(/`/g, ``);
+            this.sendEmbed(0, this.getString(`typical`, `error`, `noRoleFound`, [roleName]));
             return;
         }
         if (type == `add` || type == `remove`) this.parseMember(type);
@@ -79,7 +80,7 @@ class Role extends CommandTemplate{
         perms.toArray().forEach(p => {
             p = p.split(`_`).join(` `);
             p = p.slice(0, 1) + p.slice(1).toLowerCase();
-            permsString += `· ${p}\n`
+            permsString += `• ${p}\n`
         });
 
         console.log(this.role.calculatedPosition);
@@ -123,20 +124,10 @@ class Role extends CommandTemplate{
             .setColor(botConfig.botColor);
         this.send(embed);
     }
-    getRole(argIndex) {
-        let role;
-        if (this.msg.mentions.roles.size) {
-            let roleMentionRegEx = new RegExp(/^<@&(\d+)>$/).exec(this.args[argIndex]);
-            if (roleMentionRegEx != null && roleMentionRegEx !== undefined) {
-                role = this.msg.guild.roles.cache.find(r => r.id == roleMentionRegEx[1]);
-            }
-        }
-        else role = this.msg.guild.roles.cache.find(r => r.name == this.args[argIndex]);
-        return role;
-    }
 }
 
 module.exports = {
     name: `role`,
+    aliases: [`r`],
     execute(msg, args) {new Role(msg, args)}
 }
