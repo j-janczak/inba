@@ -3,7 +3,7 @@ const CommandTemplate = require(`../my_modules/CommandTemplate.js`);
 class BanKick extends CommandTemplate {
     constructor(msg, args) {
         super(msg, args)
-        this.type = (args[0].toLowerCase() == `ban` ? 0 : 1);
+        this.type = (this.args[0].toLowerCase() == `ban` ? 0 : 1);
 
         if(!this.checkPermission(msg)) return;
         let member = this.getMember(1);

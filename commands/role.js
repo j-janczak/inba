@@ -10,15 +10,16 @@ class Role extends CommandTemplate{
         this.role;
 
         if (args.length < 2) {
-            this.sendHelp();
+            this.help();
             return;
         }
 
-        if (args[1].toLowerCase() == `add`) this.parseRole(`add`);
-        else if (args[1].toLowerCase() == `remove`) this.parseRole(`remove`);
-        else if (args[1].toLowerCase() == `info`) this.parseRole(`info`);
-        else if (args[1].toLowerCase() == `list`) this.list();
-        else if (args[1].toLowerCase() == `help`) this.sendHelp();
+        this.action = this.args[1].toLowerCase();
+        if (this.action == `add`) this.parseRole(`add`);
+        else if (this.action == `remove`) this.parseRole(`remove`);
+        else if (this.action == `info`) this.parseRole(`info`);
+        else if (this.action == `list`) this.list();
+        else if (this.action == `help`) this.help();
         else this.sendEmbed(0, this.getString(`typical`, `unknownCommand`, [`role`]));
     }
     parseRole(type) {
@@ -83,11 +84,9 @@ class Role extends CommandTemplate{
             permsString += `• ${p}\n`
         });
 
-        console.log(this.role.calculatedPosition);
-
         let roleEmbed = new Discord.MessageEmbed()
-            .setTitle(this.role.name)
-            .setDescription(this.getString(`role`, `info`, `desc`))
+            .setTitle(`@` + this.role.name)
+            .setAuthor(this.getString(`role`, `info`, `desc`))
             .addField(this.getString(`role`, `info`, `members`), this.role.members.size, true)
             .addField(this.getString(`role`, `info`, `position`), `${Math.abs(this.role.position - this.msg.guild.roles.cache.size)}`, true)
             .addField(this.getString(`role`, `info`, `mention`), `${this.role.mentionable}`.slice(0, 1).toUpperCase() + `${this.role.mentionable}`.slice(1).toLowerCase(), true)
@@ -109,7 +108,7 @@ class Role extends CommandTemplate{
             .setFooter(this.getString(`typical`, `embed`, `footer`, [`${this.msg.member.displayName}`]));
         this.send(rolesEmbed);
     }
-    sendHelp() {
+    help() {
         let descMsg = `
             \`${botConfig.prefix} ${this.args[0]} add <@user> <@role>\` - Assigns a role to user
             \`${botConfig.prefix} ${this.args[0]} remove <@user> <@role>\` - Removes the role
@@ -117,12 +116,7 @@ class Role extends CommandTemplate{
             \`${botConfig.prefix} ${this.args[0]} list\` - Shows all roles
             \`${botConfig.prefix} ${this.args[0]} help\` - You're here
         `;
-        let embed = new Discord.MessageEmbed()
-            .setAuthor(`Mr. Inba Manual`)
-            .setTitle(`Role`)
-            .setDescription(descMsg)
-            .setColor(botConfig.botColor);
-        this.send(embed);
+        this.sendHelp(`Role`, descMsg);
     }
 }
 

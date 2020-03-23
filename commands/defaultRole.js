@@ -2,7 +2,6 @@ const {client, clientEmiter} = require(`../my_modules/discordClient.js`);
 const CommandTemplate = require(`../my_modules/CommandTemplate.js`);
 const botConfig = require(`../config/config.json`);
 const db = require(`../my_modules/database.js`);
-const Discord = require(`discord.js`);
 
 class DefaultRole extends CommandTemplate {
     constructor(msg, args) {
@@ -14,11 +13,12 @@ class DefaultRole extends CommandTemplate {
             return;
         }
 
-        if (this.args[1] == `add`) this.parseRole(0);
-        else if (this.args[1] == `remove`) this.parseRole(1);
-        else if (this.args[1] == `list`) this.list();
-        else if (this.args[1] == `help`) this.help();
-        else this.help();
+        this.action = this.args[1].toLowerCase();
+        if (this.action == `add`) this.parseRole(0);
+        else if (this.action == `remove`) this.parseRole(1);
+        else if (this.action == `list`) this.list();
+        else if (this.action == `help`) this.help();
+        else this.sendEmbed(0, this.getString(`typical`, `unknownCommand`, [`defaultRole`]));
     }
     parseRole(type) {
         if (!this.checkPermission()) return;
@@ -83,12 +83,7 @@ class DefaultRole extends CommandTemplate {
             \`${botConfig.prefix} ${this.args[0]} list\` - Shows a list of default roles
             \`${botConfig.prefix} ${this.args[0]} help\` - You're here
         `;
-        let embed = new Discord.MessageEmbed()
-            .setAuthor(`Mr. Inba Manual`)
-            .setTitle(`Default Role`)
-            .setDescription(descMsg)
-            .setColor(botConfig.botColor);
-        this.send(embed);
+        this.sendHelp(`Default Role`, descMsg);
     }
 }
 

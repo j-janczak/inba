@@ -2,7 +2,6 @@ const {client, clientEmiter} = require(`../my_modules/discordClient.js`);
 const CommandTemplate = require(`../my_modules/CommandTemplate.js`);
 const botConfig = require(`../config/config.json`);
 const db = require(`../my_modules/database.js`);
-const Discord = require(`discord.js`);
 
 class WelcomeMsg extends CommandTemplate {
     constructor(msg, args) {
@@ -10,7 +9,7 @@ class WelcomeMsg extends CommandTemplate {
         this.type = ((this.args[0].toLowerCase() == `welcomemessage` || this.args[0].toLowerCase() == `wm`) ? 0 : 1);
 
         if (this.args.length < 2) {
-            this.sendHelp();
+            this.help();
             return;
         }
 
@@ -19,7 +18,7 @@ class WelcomeMsg extends CommandTemplate {
         else if (this.action == `list`) this.list();
         else if (this.action == `remove`) this.remove();
         else if (this.action == `test`) this.test();
-        else if (this.action == `help`) this.sendHelp();
+        else if (this.action == `help`) this.help();
         else this.sendEmbed(0, this.getString(`typical`, `unknownCommand`, [args[0]]));
     }
     async addMsg() {
@@ -87,7 +86,7 @@ class WelcomeMsg extends CommandTemplate {
         message = message.replace(`%u`, `<@!${this.msg.author.id}>`);
         this.msg.guild.systemChannel.send(message);
     }
-    sendHelp() {
+    help() {
         let descMsg = `
             \`${botConfig.prefix} ${this.args[0]} add <message>\` - Adds a new message to the pool
             \`${botConfig.prefix} ${this.args[0]} remove <message id>\` - Removes the message from the pool
@@ -95,12 +94,7 @@ class WelcomeMsg extends CommandTemplate {
             \`${botConfig.prefix} ${this.args[0]} test\` - Sends a test message
             \`${botConfig.prefix} ${this.args[0]} help\` - You're here
         `;
-        let embed = new Discord.MessageEmbed()
-            .setAuthor(`Mr. Inba Manual`)
-            .setTitle(`welcomeMessage/farewellMessage`)
-            .setDescription(descMsg)
-            .setColor(botConfig.botColor);
-        this.send(embed);
+        this.sendHelp(`Welcome/Farewell Message`, descMsg);
     }
 }
 

@@ -7,11 +7,11 @@ class Avatar extends CommandTemplate {
         super(msg, args)
 
         if (args.length < 2) {
-            this.sendHelp();
+            this.help();
             return;
         }
 
-        if (args[1] == `help`) this.sendHelp();
+        if (args[1] == `help`) this.help();
         else if (args[1] == `server`) this.getServerIcon();
         else {
             let member = this.getMember(1);
@@ -44,18 +44,13 @@ class Avatar extends CommandTemplate {
             .setFooter(footer);
         this.send(avatarEmbed);
     }
-    sendHelp() {
+    help() {
         let descMsg = `
             \`${botConfig.prefix} ${this.args[0]} <@user>\` - Shows the user's avatar
             \`${botConfig.prefix} ${this.args[0]} server\` - Shows the server icon
             \`${botConfig.prefix} ${this.args[0]} help\` - You're here
         `;
-        let embed = new Discord.MessageEmbed()
-            .setAuthor(`Mr. Inba Manual`)
-            .setTitle(`Avatar`)
-            .setDescription(descMsg)
-            .setColor(botConfig.botColor);
-        this.msg.channel.send(embed);
+        this.sendHelp(`Avatar`, descMsg);
     }
 }
 

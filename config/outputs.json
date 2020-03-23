@@ -85,7 +85,7 @@
             }
         },
         "info": {
-            "desc": "Role information",
+            "desc": "Role info",
             "members": "Members",
             "position": "Position",
             "mention": "Mentionable",
@@ -138,6 +138,15 @@
         },
         "list": {
             "success": "Default roles on this server:\n\n%s"
+        }
+    },
+    "purge": {
+        "success": "Successfully deleted %s messages",
+        "error": {
+            "blankNumber": "Not specified the number of messages to delete",
+            "notValidNumber": "Please enter a valid number",
+            "numberRange": "The number of messages to delete must be between 1-100",
+            "bulk": "An error occurred while deleting the message:\n\n%s"
         }
     }
 }

@@ -1,22 +1,22 @@
 const CommandTemplate = require(`../my_modules/CommandTemplate.js`);
 const colorfulRoles = require(`../config/colorfulRoles.json`);
 const botConfig = require(`../config/config.json`);
-const Discord = require(`discord.js`);
 
 class Color extends CommandTemplate {
     constructor(msg, args) {
         super(msg, args);
 
         if (this.args.length < 2) {
-            this.sendHelp();
+            this.help();
             return;
         }
 
-        if (this.args[1].toLowerCase() == `init`) this.roleManagement(`init`);
-        else if (this.args[1].toLowerCase() == `cleanup`) this.roleManagement(`cleanup`);
-        else if (this.args[1].toLowerCase() == `remove`) this.remove();
-        else if (this.args[1].toLowerCase() == `list`) this.list();
-        else if (this.args[1].toLowerCase() == `help`) this.sendHelp();
+        this.action = this.args[1].toLowerCase();
+        if (this.action == `init`) this.roleManagement(`init`);
+        else if (this.action == `cleanup`) this.roleManagement(`cleanup`);
+        else if (this.action == `remove`) this.remove();
+        else if (this.action == `list`) this.list();
+        else if (this.action == `help`) this.help();
         else this.setColor();
     }
     async roleManagement(type) {
@@ -110,7 +110,7 @@ class Color extends CommandTemplate {
     list() {
         this.msg.channel.send(``, {files: [`./resources/color_list.png`]});
     }
-    sendHelp() {
+    help() {
         let descMsg = `
             \`${botConfig.prefix} ${this.args[0]} <color>\` - Sets the color of your nick to the given one
             \`${botConfig.prefix} ${this.args[0]} list\` - Sends a color list
@@ -119,12 +119,7 @@ class Color extends CommandTemplate {
             \`${botConfig.prefix} ${this.args[0]} cleanup\` - Removes colorful ranks
             \`${botConfig.prefix} ${this.args[0]} help\` - You're here
         `;
-        let embed = new Discord.MessageEmbed()
-            .setAuthor(`Mr. Inba Manual`)
-            .setTitle(`Colorful nicks`)
-            .setDescription(descMsg)
-            .setColor(botConfig.botColor);
-        this.send(embed);
+        this.sendHelp(`Colorful nicks`, descMsg)
     }
 }
 

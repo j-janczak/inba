@@ -1,3 +1,4 @@
+const botConfig = require(`../config/config.json`);
 const outputs = require(`../config/outputs.json`);
 const Discord = require(`discord.js`);
 
@@ -40,12 +41,15 @@ class CommandTemplate{
         .catch(error => {console.error(`Failed to send msg!\nserwer: ${this.msg.guild.name}\nchannel:${this.msg.channel.name}\nerror: ${error}`)});
     }
     sendEmbed(type, str) {
+        this.send(this.returnEmbed(type, str));
+    }
+    returnEmbed(type, str) {
         let embed = new Discord.MessageEmbed();
         if (type == 0) embed.setDescription(`⛔\xa0\xa0\xa0\xa0${str}`).setColor(`#D32F2F`);
         else if (type == 1) embed.setDescription(`✅\xa0\xa0\xa0\xa0${str}`).setColor(`#00E676`);
         else if (type == 2) embed.setDescription(`⚠\xa0\xa0\xa0\xa0${str}`).setColor(`#F57C00`);
         else if (type == 3) embed.setDescription(`➡\xa0\xa0\xa0\xa0${str}`).setColor(`#F57C00`);
-        this.send(embed);
+        return embed;
     }
     getString() {
         let values;
@@ -70,6 +74,14 @@ class CommandTemplate{
             });
         }
         return currentArray;
+    }
+    sendHelp(title, desc) {
+        let embed = new Discord.MessageEmbed()
+            .setAuthor(`Mr. Inba Manual`)
+            .setTitle(title)
+            .setDescription(desc)
+            .setColor(botConfig.botColor);
+        this.send(embed);
     }
 }
 
