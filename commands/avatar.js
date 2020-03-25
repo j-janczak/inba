@@ -6,10 +6,7 @@ class Avatar extends CommandTemplate {
     constructor(msg, args) {
         super(msg, args)
 
-        if (args.length < 2) {
-            this.help();
-            return;
-        }
+        if (args.length < 2) return this.help();
 
         if (args[1] == `help`) this.help();
         else if (args[1] == `server`) this.getServerIcon();

@@ -9,10 +9,7 @@ class Role extends CommandTemplate{
         this.member;
         this.role;
 
-        if (args.length < 2) {
-            this.help();
-            return;
-        }
+        if (args.length < 2) this.help();
 
         this.action = this.args[1].toLowerCase();
         if (this.action == `add`) this.parseRole(`add`);
@@ -34,19 +31,16 @@ class Role extends CommandTemplate{
     }
     parseMember(type) {
         this.member = this.getMember(2);
-        if (!this.member) {
-            this.sendEmbed(0, this.getString(`typical`, `error`, `memberNotFound`));
-            return;
-        }
+        if (!this.member)
+            return this.sendEmbed(0, this.getString(`typical`, `error`, `memberNotFound`));
+
         if (type == `add`) this.add();
         else if (type == `remove`) this.remove();
     }
     add() {
         if (!this.checkPermission()) return;
-        if (this.member.roles.cache.find(r => r.id == this.role.id)) {
-            this.sendEmbed(2, this.getString(`role`, `add`, `error`, `alreadyOwns`, [`<@!${this.member.id}>`, `<@&${this.role.id}>`]));
-            return;
-        }
+        if (this.member.roles.cache.find(r => r.id == this.role.id))
+            return this.sendEmbed(2, this.getString(`role`, `add`, `error`, `alreadyOwns`, [`<@!${this.member.id}>`, `<@&${this.role.id}>`]));
 
         this.member.roles.add(this.role).then(m => {
             this.sendEmbed(1, this.getString(`role`, `add`, `success`, [`<@&${this.role.id}>`, `<@!${this.member.user.id}>`]));
@@ -60,10 +54,8 @@ class Role extends CommandTemplate{
     }
     remove() {
         if (!this.checkPermission()) return;
-        if (!this.member.roles.cache.find(r => r.id == this.role.id)) {
-            this.sendEmbed(2, this.getString(`role`, `remove`, `error`, `alreadyOwns`, [`<@!${this.member.id}>`, `<@&${this.role.id}>`]));
-            return;
-        }
+        if (!this.member.roles.cache.find(r => r.id == this.role.id))
+            return this.sendEmbed(2, this.getString(`role`, `remove`, `error`, `alreadyOwns`, [`<@!${this.member.id}>`, `<@&${this.role.id}>`]));
 
         this.member.roles.remove(this.role).then(m => {
             this.sendEmbed(1, this.getString(`role`, `remove`, `success`, [`<@&${this.role.id}>`, `<@!${this.member.user.id}>`]));

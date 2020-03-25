@@ -4,18 +4,14 @@ class Purge extends CommandTemplate {
     constructor(msg, args) {
         super(msg, args);
 
-        if (this.args.length < 2) {
-            this.sendEmbed(0, this.getString(`purge`, `error`, `blankNumber`));
-            return;
-        }
-        if (isNaN(this.args[1])) {
-            this.sendEmbed(0, this.getString(`purge`, `error`, `notValidNumber`));
-            return;
-        }
-        if (parseInt(this.args[1]) < 1 || parseInt(this.args[1]) > 100) {
-            this.sendEmbed(0, this.getString(`purge`, `error`, `numberRange`));
-            return;
-        }
+        if (this.args.length < 2)
+            return this.sendEmbed(0, this.getString(`purge`, `error`, `blankNumber`));
+
+        if (isNaN(this.args[1]))
+            return this.sendEmbed(0, this.getString(`purge`, `error`, `notValidNumber`));
+
+        if (parseInt(this.args[1]) < 1 || parseInt(this.args[1]) > 100)
+            return this.sendEmbed(0, this.getString(`purge`, `error`, `numberRange`));
 
         this.bulk();
     }

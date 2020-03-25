@@ -75,6 +75,11 @@ class CommandTemplate{
         }
         return currentArray;
     }
+    async asyncForEach(array, callback) {
+        for (let index = 0; index < array.length; index++) {
+            await callback(array[index], index, array);
+        }
+    } //https://codeburst.io/javascript-async-await-with-foreach-b6ba62bbf404 <3
     sendHelp(title, desc) {
         let embed = new Discord.MessageEmbed()
             .setAuthor(`Mr. Inba Manual`)

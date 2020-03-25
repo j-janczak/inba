@@ -8,7 +8,8 @@
         "error": {
             "memberNotFound": "No member found with the given nick",
             "noRoleFound": "No role named `%s` found",
-            "dbError": "An error occurred while processing the query by the database"
+            "dbError": "An error occurred while processing the query by the database",
+            "timeFormat": "Incorrectly given time or exceeds 30 days!"
         },
         "embed": {
             "footer": "At %s request"
@@ -147,6 +148,24 @@
             "notValidNumber": "Please enter a valid number",
             "numberRange": "The number of messages to delete must be between 1-100",
             "bulk": "An error occurred while deleting the message:\n\n%s"
+        }
+    },
+    "mute": {
+        "createRole": {
+            "warning": "The role `[Inba] Muted` is already created",
+            "success": "Successfully created `[Inba] Muted` role and updated `%s`**/**`%s` channels"
+        },
+        "assignRole": {
+            "error": "`[Inba] Muted` role doesn't exist, use the `%s muteInit` command",
+            "success": {
+                "title": "%s has been muted for `%s`",
+                "footer": "Will be unmuted at: %s"
+            },
+            "warning": "%s is already muted!"
+        },
+        "unmute": {
+            "success": "%s is no longer muted",
+            "warning": "%s is not muted"
         }
     }
 }

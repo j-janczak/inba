@@ -9,10 +9,7 @@ class Info extends CommandTemplate {
     constructor(msg, args) {
         super(msg, args);
 
-        if (this.args.length < 2) {
-            this.help();
-            return;
-        }
+        if (this.args.length < 2) return this.help();
 
         this.action = this.args[1].toLowerCase();
         if (this.action == `server`) this.server();

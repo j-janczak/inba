@@ -1,17 +1,14 @@
 const {client, clientEmiter} = require(`../my_modules/discordClient.js`);
 const CommandTemplate = require(`../my_modules/CommandTemplate.js`);
 const botConfig = require(`../config/config.json`);
-const db = require(`../my_modules/database.js`);
+const {db} = require(`../my_modules/database.js`);
 
 class DefaultRole extends CommandTemplate {
     constructor(msg, args) {
         super(msg, args);
         this.role;
 
-        if (this.args.length < 2) {
-            this.help();
-            return;
-        }
+        if (this.args.length < 2) return this.help();
 
         this.action = this.args[1].toLowerCase();
         if (this.action == `add`) this.parseRole(0);
@@ -22,30 +19,23 @@ class DefaultRole extends CommandTemplate {
     }
     parseRole(type) {
         if (!this.checkPermission()) return;
-
-        if (this.args.length < 3) {
-            this.help();
-            return;
-        }
+        if (this.args.length < 3) return this.help();
 
         this.role = this.getRole(2);
-        if (!this.role) {
-            this.sendEmbed(0, this.getString(`typical`, `error`, `noRoleFound`, [this.args[2]]));
-            return;
-        }
+        if (!this.role)
+            return this.sendEmbed(0, this.getString(`typical`, `error`, `noRoleFound`, [this.args[2]]));
+
         if (type == 0) this.add();
         else if (type == 1) this.remove();
     }
     async add() {
         let checkForDuplicate = await db.query("SELECT (SELECT COUNT(*) FROM `defaultRoles` WHERE `serverFK` = ? AND defaultRoleFK = ?) as exist, (SELECT COUNT(*) FROM `defaultRoles` WHERE `serverFK` = ?) as server", [this.msg.guild.id, this.role.id, this.msg.guild.id]);
-        if (checkForDuplicate[0].exist) {
-            this.sendEmbed(2, this.getString(`defaultRoles`, `add`, `error`, `roleDuplicate`, [`<@&${this.role.id}>`]));
-            return;
-        }
-        if (checkForDuplicate[0].server > 9) {
-            this.sendEmbed(0, this.getString(`defaultRoles`, `add`, `error`, `tooMany`));
-            return;
-        }
+        
+        if (checkForDuplicate[0].exist) 
+            return this.sendEmbed(2, this.getString(`defaultRoles`, `add`, `error`, `roleDuplicate`, [`<@&${this.role.id}>`]));
+
+        if (checkForDuplicate[0].server > 9) 
+            return this.sendEmbed(0, this.getString(`defaultRoles`, `add`, `error`, `tooMany`));
 
         let result = await db.query("INSERT INTO `defaultRoles` (defaultRoleID, serverFK, defaultRoleFK) VALUES (NULL, ?, ?)", [this.msg.guild.id, this.role.id]);
         if (result.affectedRows == 1) this.sendEmbed(1, this.getString(`defaultRoles`, `add`, `success`, [`<@&${this.role.id}>`]));
@@ -53,10 +43,9 @@ class DefaultRole extends CommandTemplate {
     }
     async remove() {
         let checkForDuplicate = await db.query("SELECT COUNT(*) as exist FROM `defaultRoles` WHERE `serverFK` = ? AND `defaultRoleFK` = ?", [this.msg.guild.id, this.role.id]);
-        if (!checkForDuplicate[0].exist) {
-            this.sendEmbed(2, this.getString(`defaultRoles`, `remove`, `error`, [`<@&${this.role.id}>`]));
-            return;
-        }
+        
+        if (!checkForDuplicate[0].exist) 
+            return this.sendEmbed(2, this.getString(`defaultRoles`, `remove`, `error`, [`<@&${this.role.id}>`]));
 
         let result = await db.query("DELETE FROM `defaultRoles` WHERE `serverFK` = ? AND `defaultRoleFK` = ?", [this.msg.guild.id, this.role.id]);
         console.log(result);
@@ -65,10 +54,9 @@ class DefaultRole extends CommandTemplate {
     }
     async list() {
         let result = await db.query("SELECT defaultRoleFK as roleID FROM `defaultRoles` WHERE `serverFK` = ?", [this.msg.guild.id]);
-        if (!result) {
-            this.sendEmbed(0, this.getString(`typical`, `error`, `dbError`));
-            return;
-        }
+        
+        if (!result)
+            return this.sendEmbed(0, this.getString(`typical`, `error`, `dbError`));
 
         let defRolesStr = ``;
         result.forEach(r => {

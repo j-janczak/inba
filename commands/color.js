@@ -6,10 +6,7 @@ class Color extends CommandTemplate {
     constructor(msg, args) {
         super(msg, args);
 
-        if (this.args.length < 2) {
-            this.help();
-            return;
-        }
+        if (this.args.length < 2) return this.help();
 
         this.action = this.args[1].toLowerCase();
         if (this.action == `init`) this.roleManagement(`init`);
@@ -56,21 +53,15 @@ class Color extends CommandTemplate {
     setColor() {
         let colorFound;
         for (const color in colorfulRoles.colors) if (color.toLowerCase() == this.args[1].toLowerCase()) colorFound = color;
-        if (!colorFound) {
-            this.sendEmbed(0, this.getString(`color`, `set`, `error`, `notFound`, [this.args[1].replace(/\`/g, ``), botConfig.prefix]));
-            return;
-        }
+        if (!colorFound) 
+            return this.sendEmbed(0, this.getString(`color`, `set`, `error`, `notFound`, [this.args[1].replace(/\`/g, ``), botConfig.prefix]));
 
-        if (this.msg.member.roles.cache.find(r => r.name == `${colorfulRoles.prefix}${colorFound}`)) {
-            this.sendEmbed(2, this.getString(`color`, `set`, `warning`, `alreadyOwns`, [colorFound]));
-            return;
-        }
+        if (this.msg.member.roles.cache.find(r => r.name == `${colorfulRoles.prefix}${colorFound}`)) 
+            return this.sendEmbed(2, this.getString(`color`, `set`, `warning`, `alreadyOwns`, [colorFound]));
 
         let roleToAssign = this.msg.guild.roles.cache.find(r => r.name == `${colorfulRoles.prefix}${colorFound}`);
-        if (!roleToAssign) {
-            this.sendEmbed(0, this.getString(`color`, `set`, `error`, `notRoleFound`, [botConfig.prefix]));
-            return
-        }
+        if (!roleToAssign)
+            return this.sendEmbed(0, this.getString(`color`, `set`, `error`, `notRoleFound`, [botConfig.prefix]));
 
         let isOldDeleted = true;
         this.msg.member.roles.cache.find((r) => {
@@ -91,10 +82,7 @@ class Color extends CommandTemplate {
         });
     }
     remove() {
-        if (!this.msg.member.roles.cache.find(r => r.name.startsWith(colorfulRoles.prefix))) {
-            this.sendEmbed(2, this.getString(`color`, `remove`, `warning`));
-            return;
-        }
+        if (!this.msg.member.roles.cache.find(r => r.name.startsWith(colorfulRoles.prefix))) return this.sendEmbed(2, this.getString(`color`, `remove`, `warning`));
 
         let isOldDeleted = true;
         this.msg.member.roles.cache.find((r) => {
