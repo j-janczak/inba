@@ -5,27 +5,30 @@ const botConfig = require(`../config/config.json`);
 const {db} = require(`../my_modules/database.js`);
 const Discord = require(`discord.js`);
 
+const muteRoleName = `[Inba] Muted`;
+
 class Mute extends CommandTemplate {
     constructor(msg, args) {
         super(msg, args)
-        this.muteRoleName = `[Inba] Muted`;
         
-        if (this.checkPermission()) return;
+        if (!this.checkPermission()) return;
         const action = this.args[0].toLowerCase();
         if (action == `muteinit`) return this.createRole();
         if (this.args.length < 2) return this.help();
+
+        if (this.args[1] == `help`) return this.help();
 
         let member = this.getMember(1);
         if (member) {
             if (action == `mute`) return this.mute(member);
             if (action == `unmute`) return this.unmute(member);
-        }
+        } else this.sendEmbed(0, this.getString(`typical`, `error`, `memberNotFound`));
     }
     async mute(member) {
-        const muteRole = this.msg.guild.roles.cache.find(r => r.name == this.muteRoleName);
+        const muteRole = this.msg.guild.roles.cache.find(r => r.name == muteRoleName);
         if (!muteRole) return this.sendEmbed(2, this.getString(`mute`, `assignRole`, `error`, [botConfig.prefix]));
 
-        if (member.roles.cache.find(r => r.name == this.muteRoleName)) return this.sendEmbed(2, this.getString(`mute`, `assignRole`, `warning`, [`<@!${member.user.id}>`]));
+        if (member.roles.cache.find(r => r.name == muteRoleName)) return this.sendEmbed(2, this.getString(`mute`, `assignRole`, `warning`, [`<@!${member.user.id}>`]));
 
         let executionTime;
         let timeStr;
@@ -52,7 +55,7 @@ class Mute extends CommandTemplate {
         const dbResult = await db.query("DELETE FROM `timeTasks` WHERE JSON_EXTRACT(data, \"$.mutedUser\") = ? AND `serverFK` = ?", [member.user.id, this.msg.guild.id]);
         if (!dbResult) return this.sendEmbed(0, this.getString(`typical`, `error`, `dbError`));
 
-        const muteRole = this.msg.guild.roles.cache.find(r => r.name == this.muteRoleName);
+        const muteRole = this.msg.guild.roles.cache.find(r => r.name == muteRoleName);
         if (!muteRole) return this.sendEmbed(2, this.getString(`mute`, `assignRole`, `error`, [botConfig.prefix]));
 
         if (!member.roles.cache.has(muteRole.id)) return this.sendEmbed(2, this.getString(`mute`, `unmute`, `warning`, [`<@!${member.user.id}>`]));
@@ -62,12 +65,12 @@ class Mute extends CommandTemplate {
         }).catch(console.error);
     }
     async createRole() {
-        const muteRole = this.msg.guild.roles.cache.find(r => r.name == this.muteRoleName);
+        const muteRole = this.msg.guild.roles.cache.find(r => r.name == muteRoleName);
         if (muteRole) return this.sendEmbed(2, this.getString(`mute`, `createRole`, `warning`));
 
         muteRole = await this.msg.guild.roles.create({
             data: {
-                name: this.muteRoleName,
+                name: muteRoleName,
                 color: `#f4424b`,
                 permissions: new Discord.Permissions(0)
             }
@@ -92,13 +95,21 @@ class Mute extends CommandTemplate {
             .setColor(`#00E676`);
         this.send(muteEmbed);
     }
+    help() {
+        let descMsg = `
+            \`${botConfig.prefix} mute <@user> (time)\`
+            \`${botConfig.prefix} unmute <@user>\`
+            \`${botConfig.prefix} muteInit\` - Creates a mute rank and assigns it to each channel
+        `;
+        this.sendHelp(`Mute`, descMsg);
+    }
 }
 
 clientEmiter.on(`takExecuteMute`, task => {
     const guild = client.guilds.cache.get(task.serverFK);
     if (!guild) return;
 
-    const muteRole = guild.roles.cache.find(r => r.name == `[Inba] Muted`);
+    const muteRole = guild.roles.cache.find(r => r.name == muteRoleName);
     if (!muteRole) return;
 
     const taskMemberID = JSON.parse(task.data).mutedUser;
@@ -107,6 +118,18 @@ clientEmiter.on(`takExecuteMute`, task => {
 
     member.roles.remove(muteRole);
 });
+
+client.on(`channelCreate`, chnnl => {
+    if (chnnl.type != `text` && chnnl.type != `voice` && chnnl.type != `category`) return;
+
+    const muteRole = chnnl.guild.roles.cache.find(r => r.name == muteRoleName);
+    if (!muteRole) return;
+
+    chnnl.overwritePermissions([{
+        id: muteRole.id,
+        deny: [`SEND_MESSAGES`]
+    }]).catch(console.error);
+})
 
 module.exports = {
     name: `mute`,

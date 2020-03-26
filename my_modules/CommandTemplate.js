@@ -1,5 +1,5 @@
 const botConfig = require(`../config/config.json`);
-const outputs = require(`../config/outputs.json`);
+const outputs = require(`./inbaOutputs.js`);
 const Discord = require(`discord.js`);
 
 class CommandTemplate{
@@ -51,30 +51,6 @@ class CommandTemplate{
         else if (type == 3) embed.setDescription(`➡\xa0\xa0\xa0\xa0${str}`).setColor(`#F57C00`);
         return embed;
     }
-    getString() {
-        let values;
-        let skip;
-        if (Array.isArray(arguments[Object.keys(arguments)[Object.keys(arguments).length - 1]])) {
-            values = arguments[Object.keys(arguments)[Object.keys(arguments).length - 1]];
-            skip = Object.keys(arguments)[Object.keys(arguments).length - 1];
-        }
-        
-        let currentArray = outputs;
-        for (const arg in arguments) {
-            if (arg == skip) continue;
-            currentArray = currentArray[arguments[arg]];
-        }
-    
-        if (Array.isArray(currentArray))
-            currentArray = currentArray[Math.floor(Math.random() * currentArray.length)];
-    
-        if (values) {
-            values.forEach(value => {
-                currentArray = currentArray.replace("%s", value);
-            });
-        }
-        return currentArray;
-    }
     async asyncForEach(array, callback) {
         for (let index = 0; index < array.length; index++) {
             await callback(array[index], index, array);
@@ -88,6 +64,7 @@ class CommandTemplate{
             .setColor(botConfig.botColor);
         this.send(embed);
     }
+    getString() {return outputs.get.apply(null, arguments)}
 }
 
 module.exports = CommandTemplate;

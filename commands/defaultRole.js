@@ -75,7 +75,7 @@ class DefaultRole extends CommandTemplate {
     }
 }
 
-async function assingRole(member) {
+client.on(`guildMemberAdd`, async (member) => {
     let result = await db.query("SELECT defaultRoleFK as roleID FROM `defaultRoles` WHERE `serverFK` = ?", [member.guild.id]);
     if (!result) return;
 
@@ -83,9 +83,7 @@ async function assingRole(member) {
         let role = member.guild.roles.cache.find(r => r.id == rDB.roleID);
         if (role) member.roles.add(role).catch(console.error);
     })
-}
-
-clientEmiter.on(`memberJoined`, async (member) => {assingRole(member)});
+});
 
 module.exports = {
     name: `defaultrole`,

@@ -1,4 +1,22 @@
 {
+    "ping": [
+        "Wciąż jestem w becie",
+        "GDZIE JEST SERWER MINECRAFTA?",
+        "Złomek był lepszym adminem",
+        "Rządzi ZSTiO!",
+        "Beka z GEO",
+        "Na serwerze z wami to jak z paralitykami",
+        "nie.",
+        "No elo",
+        "Co mnie pingujesz",
+        "Admini o tym nie wiedzą ( ͡° ͜ʖ ͡°)",
+        "GDZIE JEST SERWER TERRARI?",
+        "70 modów to za dużo",
+        "Kolejna inba?",
+        "@AxelBot i @Vitkowski to moi najlepsi kumple <3",
+        "Siema",
+        "Działam na silniku dmfe w wersji 0.5"
+    ],
     "noPermission": [
         "You don't have permission",
         "You aren't an admin",
@@ -106,7 +124,7 @@
         },
         "cleanup": {
             "error": "An error occurred while deleting roles! Most likely, I don't have permission to manage roles.",
-            "success": "Successfully deleted %s roles",
+            "success": "Successfully deleted `%s` roles",
             "warning": "This server has no colorful roles"
         },
         "set": {
@@ -116,9 +134,9 @@
                 "notRoleFound": "The color is correct but no role found. Ask the administration to use the `%s color init` command"
             },
             "warning": {
-                "alreadyOwns": "Your nickname already has a %s color"
+                "alreadyOwns": "Your nickname already has a `%s` color"
             },
-            "success": "Your nick has now %s color"
+            "success": "Your nick has now `%s` color"
         },
         "remove": {
             "success": "Your nick no longer has a color",

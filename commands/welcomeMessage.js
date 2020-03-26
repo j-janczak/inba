@@ -93,8 +93,8 @@ async function onMemberAction(member, type) {
     member.guild.systemChannel.send(message);
 }
 
-clientEmiter.on(`memberJoined`, async (member) => {onMemberAction(member, 0)});
-clientEmiter.on(`memberLeft`, async (member) => {onMemberAction(member, 1)});
+client.on(`guildMemberAdd`, async (member) => {onMemberAction(member, 0)});
+client.on(`guildMemberRemove`, async (member) => {onMemberAction(member, 1)});
 
 module.exports = {
     name: `welcomemessage`,

@@ -1,17 +1,17 @@
 const outputs = require(`../config/outputs.json`);
 
-function get(args) {
+function get() {
     let values;
     let skip;
-    if (Array.isArray(args[Object.keys(args)[Object.keys(args).length - 1]])) {
-        values = args[Object.keys(args)[Object.keys(args).length - 1]];
-        skip = Object.keys(args)[Object.keys(args).length - 1];
+    if (Array.isArray(arguments[Object.keys(arguments)[Object.keys(arguments).length - 1]])) {
+        values = arguments[Object.keys(arguments)[Object.keys(arguments).length - 1]];
+        skip = Object.keys(arguments)[Object.keys(arguments).length - 1];
     }
     
     let currentArray = outputs;
-    for (const arg in args) {
+    for (const arg in arguments) {
         if (arg == skip) continue;
-        currentArray = currentArray[args[arg]];
+        currentArray = currentArray[arguments[arg]];
     }
 
     if (Array.isArray(currentArray))
