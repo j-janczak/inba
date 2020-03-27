@@ -65,7 +65,7 @@ class Mute extends CommandTemplate {
         }).catch(console.error);
     }
     async createRole() {
-        const muteRole = this.msg.guild.roles.cache.find(r => r.name == muteRoleName);
+        let muteRole = this.msg.guild.roles.cache.find(r => r.name == muteRoleName);
         if (muteRole) return this.sendEmbed(2, this.getString(`mute`, `createRole`, `warning`));
 
         muteRole = await this.msg.guild.roles.create({
