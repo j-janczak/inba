@@ -15,7 +15,7 @@ class MrInba {
         client.login(botConfig.token);
     }
     onReady() {
-        client.user.setActivity(`Type !mi help`);
+        client.user.setActivity(`Type ${botConfig.prefix} help`);
         console.log(`Inba powstał! - ${client.guilds.cache.size} serwerów 🖥`.gray);
         client.guilds.cache.forEach(g => {console.log(g.name.gray)});
     }
