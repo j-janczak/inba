@@ -8,7 +8,7 @@ class BanKick extends CommandTemplate {
         if(!this.checkPermission(msg)) return;
         let member = this.getMember(1);
         if (member) this.kick(member);
-        else this.sendEmbed(0, op.get(`typical`, `error`, `memberNotFound`));
+        else this.sendEmbed(0, this.getString(`typical`, `error`, `memberNotFound`));
     }
     kick(member) {
         let _reason;
@@ -16,7 +16,7 @@ class BanKick extends CommandTemplate {
             this.args.splice(0, 2);
             _reason = this.args.join(` `);
         } else {
-            _reason = op.get(`banKick`, `noReason`);
+            _reason = this.getString(`banKick`, `noReason`);
         }
         
         if (this.type) {
