@@ -24,14 +24,14 @@ class BanKick extends CommandTemplate {
                 this.sendEmbed(1, this.getString(`banKick`, `success`, this.type, [exMember.user.tag, _reason]));
             }).catch((e) => {
                 console.error(e);
-                this.sendEmbed(1, this.getString(`banKick`, `error`, [this.args[0]]));
+                this.sendEmbed(0, this.getString(`banKick`, `error`, [this.args[0]]));
             });
         } else {
             member.ban({reason: _reason}).then((exMember) => {
                 this.sendEmbed(1, this.getString(`banKick`, `success`, this.type, [exMember.user.tag, _reason]));
             }).catch((e) => {
                 console.error(e);
-                this.sendEmbed(1, this.getString(`banKick`, `error`, [this.args[0]]));
+                this.sendEmbed(0, this.getString(`banKick`, `error`, [this.args[0]]));
             });
         }
     }
