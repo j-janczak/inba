@@ -15,7 +15,7 @@ class CommandTemplate{
     getMember(argIndex) {
         let member;
         if (this.msg.mentions.users.size) {
-            let memberMentionRegEx = new RegExp(/^<@!(\d+)>$/).exec(this.args[argIndex]);
+            let memberMentionRegEx = new RegExp(/^<@!?(\d+)>$/).exec(this.args[argIndex]);
             if (memberMentionRegEx != null && memberMentionRegEx !== undefined) {
                 member = this.msg.guild.members.cache.find(m => m.user.id == memberMentionRegEx[1]);
             }
