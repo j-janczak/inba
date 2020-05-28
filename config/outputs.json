@@ -185,5 +185,9 @@
             "success": "%s is no longer muted",
             "warning": "%s is not muted"
         }
+    },
+    "logs": {
+        "msgCount": "%s sent %s messages",
+        "footer": "Messages are logged since 26 Mar 2020"
     }
 }
