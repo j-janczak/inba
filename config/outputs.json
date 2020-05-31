@@ -25,6 +25,7 @@
     "typical": {
         "error": {
             "memberNotFound": "No member found with the given nick",
+            "channelNotFound": "No channel found with the given name",
             "noRoleFound": "No role named `%s` found",
             "dbError": "An error occurred while processing the query by the database",
             "timeFormat": "Incorrectly given time or exceeds 30 days!"
@@ -187,7 +188,8 @@
         }
     },
     "logs": {
-        "msgCount": "%s sent %s messages",
+        "msgCount": "%s sent `%s` messages",
+        "channelMsgCount": "Channel %s: `%s` messages",
         "footer": "Messages are logged since 26 Mar 2020"
     }
 }
