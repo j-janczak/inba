@@ -35,6 +35,15 @@ class CommandTemplate{
         else role = this.msg.guild.roles.cache.find(r => r.name == this.args[argIndex]);
         return role;
     }
+    getChannel(argIndex) {
+        let channel;
+        let channelMentionRegEx = new RegExp(/^<#(\d+)>$/).exec(this.args[argIndex]);
+        if (channelMentionRegEx != null && channelMentionRegEx !== undefined) {
+            channel = this.msg.guild.channels.cache.find(r => r.id == channelMentionRegEx[1]);
+        }
+        else channel = this.msg.guild.channels.cache.find(r => r.name == this.args[argIndex]);
+        return channel;
+    }
     send(str, callback = null) {
         this.msg.channel.send(str)
         .then(m => {if(callback) callback(m)})
