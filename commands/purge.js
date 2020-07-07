@@ -4,6 +4,8 @@ class Purge extends CommandTemplate {
     constructor(msg, args) {
         super(msg, args);
 
+        if(!this.checkPermission(msg)) return;
+
         if (this.args.length < 2)
             return this.sendEmbed(0, this.getString(`purge`, `error`, `blankNumber`));
 
