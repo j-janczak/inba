@@ -17,6 +17,7 @@ class DosMasters extends CommandTemplate {
         else if (action == `ptak`) this.send(`przestań mi wysyłać azjatki na pw`);
         else if (action == `wiktor`) this.send(`daj buszka`);
         else if (action == `złomek`) this.send(`najlepszy admin`);
+        else if (action == `pis`) this.send(`**\*\*\*\*\* \*\*\*!**`);
         else if (action == `furim` || action == `furimm`) this.send(`zasraniec się zesrał`);
         else if (action == `digit` || action == `digitcrusher`) this.send(`zasrany linuxowiec`);
     }
