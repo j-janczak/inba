@@ -25,6 +25,6 @@ class DosMasters extends CommandTemplate {
 
 module.exports = {
     name: `dosmasters`,
-    aliases: [`autoit`, `kris`, `mihaszek`, `mihaszki`, `alex`, `mssc`, `revox`, `kuba`, `alina`, `majkel`, `złomek`, `ptak`, `digit`, `digitcrusher`, `furim`, `furimm`],
+    aliases: [`autoit`, `kris`, `mihaszek`, `mihaszki`, `alex`, `mssc`, `revox`, `kuba`, `alina`, `majkel`, `złomek`, `ptak`, `digit`, `digitcrusher`, `furim`, `furimm`, `pis`],
     execute(msg, args) {new DosMasters(msg, args)}
 }
