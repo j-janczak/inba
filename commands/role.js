@@ -9,7 +9,10 @@ class Role extends CommandTemplate{
         this.member;
         this.role;
 
-        if (args.length < 2) this.help();
+        if (args.length < 2) {
+            this.help();
+            return;
+        }
 
         this.action = this.args[1].toLowerCase();
         if (this.action == `add`) this.parseRole(`add`);
