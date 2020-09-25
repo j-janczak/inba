@@ -5,6 +5,7 @@ const Errors = require('../misc/errors');
 const ServerStatus = require('../const/server-status');
 const StateChange = require('../const/state-change');
 const Collations = require('../const/collations');
+const OkPacket = require('./class/ok-packet');
 
 /**
  * Default command interface.
@@ -21,41 +22,91 @@ class Command extends EventEmitter {
 
   displaySql() {}
 
+  /**
+   * Throw an an unexpected error.
+   * server exchange will still be read to keep connection in a good state, but promise will be rejected.
+   *
+   * @param msg message
+   * @param fatal is error fatal for connection
+   * @param info current server state information
+   * @param sqlState error sqlState
+   * @param errno error number
+   */
+  throwUnexpectedError(msg, fatal, info, sqlState, errno) {
+    if (this.reject) {
+      process.nextTick(
+        this.reject,
+        Errors.createError(msg, fatal, info, sqlState, errno, this.stack, false)
+      );
+      this.resolve = null;
+      this.reject = null;
+    }
+  }
+
+  /**
+   * Create and throw new Error from error information
+   * only first called throwing an error or successfully end will be executed.
+   *
+   * @param msg message
+   * @param fatal is error fatal for connection
+   * @param info current server state information
+   * @param sqlState error sqlState
+   * @param errno error number
+   */
   throwNewError(msg, fatal, info, sqlState, errno) {
-    process.nextTick(
-      this.reject,
-      Errors.createError(msg, fatal, info, sqlState, errno, this.stack, false)
-    );
     this.onPacketReceive = null;
-    this.resolve = null;
-    this.reject = null;
+    if (this.reject) {
+      process.nextTick(
+        this.reject,
+        Errors.createError(msg, fatal, info, sqlState, errno, this.stack, false)
+      );
+      this.resolve = null;
+      this.reject = null;
+    }
     this.emit('end');
   }
 
+  /**
+   * Throw Error
+   *  only first called throwing an error or successfully end will be executed.
+   *
+   * @param err error to be thrown
+   * @param info current server state information
+   */
   throwError(err, info) {
-    if (this.stack) {
-      err = Errors.createError(
-        err.message,
-        err.fatal,
-        info,
-        err.sqlState,
-        err.errno,
-        this.stack,
-        false
-      );
-    }
     this.onPacketReceive = null;
-    this.resolve = null;
-    process.nextTick(this.reject, err);
-    this.reject = null;
+    if (this.reject) {
+      if (this.stack) {
+        err = Errors.createError(
+          err.message,
+          err.fatal,
+          info,
+          err.sqlState,
+          err.errno,
+          this.stack,
+          false
+        );
+      }
+      this.resolve = null;
+      process.nextTick(this.reject, err);
+      this.reject = null;
+    }
     this.emit('end', err);
   }
 
+  /**
+   * Successfully end command.
+   * only first called throwing an error or successfully end will be executed.
+   *
+   * @param val return value.
+   */
   successEnd(val) {
     this.onPacketReceive = null;
-    this.reject = null;
-    process.nextTick(this.resolve, val);
-    this.resolve = null;
+    if (this.resolve) {
+      this.reject = null;
+      process.nextTick(this.resolve, val);
+      this.resolve = null;
+    }
     this.emit('end');
   }
 
@@ -63,15 +114,11 @@ class Command extends EventEmitter {
     packet.skip(1); //skip header
 
     const affectedRows = packet.readUnsignedLength();
-    const insertIds = packet.readSignedLength();
+    const insertId = packet.readSignedLength();
 
     info.status = packet.readUInt16();
 
-    const rs = {
-      affectedRows: affectedRows,
-      insertId: insertIds,
-      warningStatus: packet.readUInt16()
-    };
+    const okPacket = new OkPacket(affectedRows, insertId, packet.readUInt16());
 
     if (info.status & ServerStatus.SESSION_STATE_CHANGED) {
       packet.skipLengthCodedNumber();
@@ -109,7 +156,7 @@ class Command extends EventEmitter {
       }
     }
 
-    return rs;
+    return okPacket;
   }
 }
 

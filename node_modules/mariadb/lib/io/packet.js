@@ -18,9 +18,28 @@ class Packet {
   skip(n) {
     this.pos += n;
   }
-  readGeometry() {
+
+  readGeometry(dataTypeName) {
     const geoBuf = this.readBufferLengthEncoded();
     if (geoBuf === null || geoBuf.length === 0) {
+      if (dataTypeName) {
+        switch (dataTypeName) {
+          case 'point':
+            return { type: 'Point' };
+          case 'linestring':
+            return { type: 'LineString' };
+          case 'polygon':
+            return { type: 'Polygon' };
+          case 'multipoint':
+            return { type: 'MultiPoint' };
+          case 'multilinestring':
+            return { type: 'MultiLineString' };
+          case 'multipolygon':
+            return { type: 'MultiPolygon' };
+          default:
+            return { type: dataTypeName };
+        }
+      }
       return null;
     }
     let geoPos = 4;
@@ -300,7 +319,7 @@ class Packet {
 
     this.pos += len;
     let str = this.buf.toString('ascii', this.pos - len, this.pos);
-    return bigNumberStrings ? str : parseFloat(str);
+    return bigNumberStrings ? str : +str;
   }
 
   readDate() {
@@ -337,13 +356,7 @@ class Packet {
     if (str.startsWith('0000-00-00 00:00:00')) return null;
 
     if (opts.tz) {
-      return new Date(
-        opts
-          .tz(str)
-          .clone()
-          .tz(opts.localTz)
-          .format('YYYY-MM-DD HH:mm:ss.SSSSSS')
-      );
+      return new Date(opts.tz(str).clone().tz(opts.localTz).format('YYYY-MM-DD HH:mm:ss.SSSSSS'));
     }
     return new Date(str);
   }
@@ -370,48 +383,9 @@ class Packet {
 
   readFloatLengthCoded() {
     const len = this.readUnsignedLength();
-
-    if (len === 0 || !len) {
-      return len;
-    }
-
-    let result = 0;
-    let end = this.pos + len;
-    let factor = 1;
-    let dotfactor = 1;
-    let resultDot = 0;
-    let charCode = 0;
-
-    //-
-    if (this.buf[this.pos] === 45) {
-      this.pos++;
-      factor = -1;
-    }
-
-    //+
-    if (this.buf[this.pos] === 43) {
-      this.pos++; // just ignore
-    }
-
-    while (this.pos < end) {
-      charCode = this.buf[this.pos];
-      if (charCode === 46) {
-        //dot
-        this.pos++;
-
-        dotfactor = 1;
-        while (this.pos < end) {
-          dotfactor *= 10;
-          resultDot *= 10;
-          resultDot += this.buf[this.pos++] - 48;
-        }
-      } else {
-        result *= 10;
-        result += this.buf[this.pos++] - 48;
-      }
-    }
-
-    return factor * (result + resultDot / dotfactor);
+    if (len === null) return null;
+    this.pos += len;
+    return +this.buf.toString('ascii', this.pos - len, this.pos);
   }
 
   skipLengthCodedNumber() {
