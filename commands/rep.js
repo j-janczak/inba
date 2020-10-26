@@ -27,11 +27,15 @@ class Rep extends CommandTemplate {
             this.send(this.returnEmbed(2, this.getString(`typical`, `error`, `memberNotFound`)));
             return;
         }
+        if (this.msg.author.id == memberToRep.id) {
+            this.send(this.returnEmbed(2, this.getString(`repPoint`, `repMyself`)));
+            return;
+        }
 
         let repType = type ? `+` : `-`;
         let color = type ? `#00E676` : `#D32F2F`;
 
-        let result1 = await db.query("INSERT INTO `mrinba`.`repPoints` (serverFK, userFK, points) VALUES (?, ?, 0) ON DUPLICATE KEY UPDATE `repPoints`.`points` = `repPoints`.`points` " + repType + " 1",
+        let result1 = await db.query("INSERT INTO `mrinba`.`repPoints` (serverFK, userFK, points) VALUES (?, ?, 1) ON DUPLICATE KEY UPDATE `repPoints`.`points` = `repPoints`.`points` " + repType + " 1",
             [this.msg.guild.id, memberToRep.id]);
         if (!result1) return;
 

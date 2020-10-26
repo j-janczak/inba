@@ -202,6 +202,7 @@
         ],
         "repChanged": "%s gave %s a **%s** point\n\n\"%s\" *~ %s*",
         "repChangedNoReason": "%s gave %s a **%s** point",
-        "memberPoints": "%s points: %s"
+        "memberPoints": "%s points: %s",
+        "repMyself": "Are you kidding? 🤦‍♂️"
     }
 }
