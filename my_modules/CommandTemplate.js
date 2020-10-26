@@ -13,6 +13,7 @@ class CommandTemplate{
         return perm;
     }
     getMember(argIndex) {
+        if (argIndex >= this.args.length) return undefined;
         let member;
         if (this.msg.mentions.users.size) {
             let memberMentionRegEx = new RegExp(/^<@!?(\d+)>$/).exec(this.args[argIndex]);

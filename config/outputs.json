@@ -191,5 +191,17 @@
         "msgCount": "%s sent `%s` messages",
         "channelMsgCount": "Channel %s: `%s` messages",
         "footer": "Messages are logged since 26 Mar 2020"
+    },
+    "repPoint": {
+        "titles": [
+            "A wild point has appeared!",
+            "Someone got a point!",
+            "Is this okay?",
+            "Hey you, point for you",
+            "Hot point is already waiting for you"
+        ],
+        "repChanged": "%s gave %s a **%s** point\n\n\"%s\" *~ %s*",
+        "repChangedNoReason": "%s gave %s a **%s** point",
+        "memberPoints": "%s points: %s"
     }
 }
