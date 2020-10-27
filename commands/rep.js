@@ -13,10 +13,10 @@ class Rep extends CommandTemplate {
     constructor(msg, args) {
         super(msg, args)
 
-        if (args[0] == `rep` && args[1] == `help`) {
-            this.help();
-            return;
-        }
+        if (args[0] == `rep` && args[1] == `help`) {this.help(); return;}
+        else if (args[0] == `rep` && args[1] == `ranking`) {this.ranking(); return;}
+        else if (args[0] == `rep` && args[1] == `history`) {this.getMemberHistory(this.getMember(2)); return;}
+        else if (args[0] == `myrep` && args[1] == `history`) {this.getMemberHistory(this.msg.member); return;}
         else if (args[0] == `-rep`) this.changeRepPoint(0, this.getMember(1));
         else if (args[0] == `+rep`) this.changeRepPoint(1, this.getMember(1));
         else if (args[0] == `myrep`) this.getMemberRep(this.msg.member);
@@ -39,13 +39,19 @@ class Rep extends CommandTemplate {
             [this.msg.guild.id, memberToRep.id]);
         if (!result1) return;
 
+        let reason = this.msg.content.slice(this.msg.content.indexOf(this.args[1]) + this.args[1].length + 1).trim();
+
+        if (reason.length) {
+            if (reason.length) reason = reason.length > 120 ? `${reason.slice(0, 117)}...` : reason;
+            db.query("INSERT INTO `mrinba`.`repQuotes` (id, serverFK, senderFK, receiverFK, quote, pointType) VALUES (NULL, ?, ?, ?, ?, " + repType + "1)",
+                [this.msg.guild.id, this.msg.author.id, memberToRep.id, reason]);
+        }
+
         let result2 = await db.query("SELECT * FROM `mrinba`.`repPoints` WHERE `repPoints`.`serverFK` = ? AND `repPoints`.`userFK` = ?",
             [this.msg.guild.id, memberToRep.id]);
         if (!result2) return;
 
         let emojiPoints = this.pointsToEmoji(result2[0].points.toString());
-
-        let reason = this.msg.content.slice(this.msg.content.indexOf(this.args[1]) + this.args[1].length + 1).trim();
         let reasonEmbed = reason.length ? this.getString(`repPoint`, `repChanged`, [`<@!${this.msg.author.id}>`, `<@!${memberToRep.id}>`, `${repType}1`, reason, this.msg.member.displayName]) : this.getString(`repPoint`, `repChangedNoReason`, [`<@!${this.msg.author.id}>`, `<@!${memberToRep.id}>`, `${repType}1`])
 
         let repEmbed = new Discord.MessageEmbed()
@@ -70,10 +76,59 @@ class Rep extends CommandTemplate {
 
         this.send(this.returnEmbed(3, this.getString(`repPoint`, `memberPoints`, [member.displayName, emojiPoints])));
     }
+    async getMemberHistory(member) {
+        if (member === undefined) {
+            this.send(this.returnEmbed(2, this.getString(`typical`, `error`, `memberNotFound`)));
+            return;
+        }
+
+        let result = await db.query("SELECT * FROM repQuotes WHERE serverFK = ? AND receiverFK = ? LIMIT 10",
+            [this.msg.guild.id, member.id]);
+        if (!result) return;
+
+        if (!result.length) {
+            this.sendEmbed(2, `This user has no reputation history`);
+            return;
+        }
+
+        let result2 = await db.query("SELECT * FROM repPoints WHERE serverFK = ? AND userFK = ?",
+            [this.msg.guild.id, member.id]);
+        if (!result2) return;
+
+        let history = ``;
+        result.forEach(row => {
+            let point = row.pointType > 0 ? `+1` : `\xa0\xa0-1`;
+            history += `**${point}**, "${row.quote}" ~ <@!${row.senderFK}>\n`;
+        })
+
+        let repEmbed = new Discord.MessageEmbed()
+            .setAuthor(member.displayName)
+            .setTitle(`Reputation history`)
+            .setDescription(history)
+            .setFooter(`In total: ${this.pointsToEmoji(result2[0].points.toString())}`)
+            .setColor(botConfig.botColor);
+        this.send(repEmbed);
+    }
+    async ranking() {
+        let result = await db.query("SELECT * FROM repPoints WHERE serverFK = ? ORDER BY points DESC LIMIT 10",
+            [this.msg.guild.id]);
+        if (!result) return;
+
+        let ranking = ``;
+        result.forEach((row, index) => {
+            ranking += `\`${index + 1}\`. <@!${row.userFK}> - **${this.pointsToEmoji(row.points.toString())}**\n`;
+        })
+
+        let repEmbed = new Discord.MessageEmbed()
+            .setTitle(`Reputation ranking`)
+            .setDescription(ranking)
+            .setColor(botConfig.botColor);
+        this.send(repEmbed);
+    }
     pointsToEmoji(points) {
         let emojiPoints = ``;
         for (let i = 0; i < points.length; i++) {
-            if (points.charAt(i) == `-`) emojiPoints += `-`;
+            if (points.charAt(i) == `-`) emojiPoints += `—`;
             else if (points.charAt(i) == `0`) emojiPoints += `0️⃣`;
             else if (points.charAt(i) == `1`) emojiPoints += `1️⃣`;
             else if (points.charAt(i) == `2`) emojiPoints += `2️⃣`;
@@ -92,7 +147,10 @@ class Rep extends CommandTemplate {
             \`${botConfig.prefix} +rep <@user>\` - Increases the user's rating
             \`${botConfig.prefix} -rep <@user>\` - Lowers the user's rating
             \`${botConfig.prefix} myRep\` - Shows your points
+            \`${botConfig.prefix} myRep history\` - History of your points
             \`${botConfig.prefix} rep <@user>\` - Shows user points
+            \`${botConfig.prefix} rep history <@user>\` - User points history
+            \`${botConfig.prefix} rep ranking\` - Users ranking
         `;
         this.sendHelp(`Reputation points`, descMsg);
     }
