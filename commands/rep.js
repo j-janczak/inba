@@ -82,7 +82,7 @@ class Rep extends CommandTemplate {
             return;
         }
 
-        let result = await db.query("SELECT * FROM repQuotes WHERE serverFK = ? AND receiverFK = ? LIMIT 10",
+        let result = await db.query("SELECT * FROM repQuotes WHERE serverFK = ? AND receiverFK = ? ORDER BY id DESC LIMIT 10",
             [this.msg.guild.id, member.id]);
         if (!result) return;
 
