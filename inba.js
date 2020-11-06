@@ -23,7 +23,7 @@ class MrInba {
         if (msg.channel.type != `text`) return;
         messageLogs.execute(msg);
         if (msg.author.id == client.user.id) return;
-        if (msg.content == botConfig.prefix) return msg.channel.send(outputs.get(`ping`));
+        if (msg.content == botConfig.prefix) return msg.channel.send(outputs.get(`ping`, [`<@!${msg.author.id}>`]));
         if (!msg.content.match((new RegExp(`^${botConfig.prefix} `, `g`)))) return;
     
         let args = [];
