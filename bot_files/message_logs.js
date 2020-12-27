@@ -1,28 +1,22 @@
-const db = require('./mongo.js');
+const mongo = require('./mongo.js');
 
 class MessageLogs {
     logs(msg) {
-        let msgData = {
-            _id: msg.id,
-            server: {
-                id: msg.channel.guild.id,
-                name: msg.channel.guild.name
-            },
-            channel: {
-                id: msg.channel.id,
-                name: msg.channel.name
-            },
-            author: {
-                id: msg.author.id,
-                name: msg.author.username,
-                bot: msg.author.bot
-            },
-            content: msg.content,
-            clearContent: msg.cleanContent,
-            attachments: msg.attachments,
-            deleted: false
-        }
-        db.logMessage(msgData);
+        let msgData = mongo.templates.message_log;
+        msgData._id = msg.id;
+        msgData.server._id = msg.channel.guild.id;
+        msgData.server.name = msg.channel.guild.name;
+        msgData.channel._id = msg.channel.id;
+        msgData.channel.name = msg.channel.name;
+        msgData.author._id = msg.author.id;
+        msgData.author.name = `${msg.author.username}#${msg.author.discriminator}`;
+        msgData.author.bot = msg.author.bot;
+        msgData.content = msg.content;
+        msgData.clearContent = msg.cleanContent;
+        msgData.attachments = msg.attachments;
+        msgData.createdTime = msg.createdTimestamp;
+        //console.log(msgData);
+        mongo.db.logMessage(msgData);
     }
 }
 

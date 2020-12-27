@@ -1,20 +1,23 @@
-const {token} = require('./cfg/config.json')
+const {token} = require('./cfg/config.json');
+const mongo = require('./bot_files/mongo.js');
 const Discord = require('discord.js');
-const MongoDB = require('./bot_files/mongo.js');
 const messageLogs = require('./bot_files/message_logs.js');
+
 
 class MrInba {
     constructor() {
-        const client = new Discord.Client();
-        client.on('ready', this.ready);
-        client.on('message', (msg) => {this.onMessage(msg)});
+        this.client = new Discord.Client();
+        this.client.on('ready', (c) => {this.ready(c)});
+        this.client.on('message', (msg) => {this.onMessage(msg)});
+
+        
 
         this.ml = new messageLogs();
 
-        client.login(token);
+        this.client.login(token);
     }
     ready() {
-        console.log(`Zalogowano`);
+        console.log("Zalogowano");
     }
     onMessage(msg) {
         this.ml.logs(msg);
