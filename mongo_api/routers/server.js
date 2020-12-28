@@ -5,7 +5,9 @@ class Server extends Collection {
         super(_name, _schema);
     }
     /* override */ get(req, res, next) {
-        this.model.find({}, (err, result) => {
+        let query = this.model.find({}).select('_id msgCount games welcome_messages farewell_messages');
+        
+        query.exec((err, result) => {
             if (err) {
                 res.send(err);
             } else {
