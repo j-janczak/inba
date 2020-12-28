@@ -21,7 +21,7 @@ class MrInba {
     }
     onMessage(msg) {
         if (msg.channel.type != `text`) return;
-        //this.ml.logs(msg);
+        this.ml.logs(msg);
         if (msg.author.id == this.client.user.id) return;
 
         //if (msg.content == botConfig.prefix) return msg.channel.send(outputs.get(`ping`, [`<@!${msg.author.id}>`]));
