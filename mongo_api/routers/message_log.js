@@ -45,7 +45,7 @@ class MessageLog extends Collection {
             },
             content: data.content,
             clearContent: data.clearContent,
-            attachments: data.attachments,
+            attachments: JSON.parse(data.attachments),
             createdTime: data.createdTime,
             deleted: data.deleted
         })
@@ -75,7 +75,7 @@ const messageLog = new MessageLog('message_log', {
     },
     content: {type: String, require: true},
     clearContent: {type: String, require: true},
-    attachments: {type: Object, default: {}},
+    attachments: {type: Array, default: []},
     createdTime: {type: Number, require: true},
     deleted: {type: Boolean, default: false}
 });
