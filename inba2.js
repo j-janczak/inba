@@ -4,6 +4,9 @@ const messageLogs = require('./bot_files/message_logs.js');
 
 const commands = require(`./bot_files/commands.js`);
 
+
+/* TEMP */ const outputs = require(`./bot_files/inbaOutputs.js`);
+
 class MrInba {
     constructor() {
         this.client = new Discord.Client();
@@ -18,10 +21,55 @@ class MrInba {
     ready() {
         this.client.user.setActivity(`!ji | Jestem w becie OwO`);
         console.log("Zalogowano");
+
+        //this.client.api.applications(this.client.user.id).guilds('599715795391610904').commands('793491355350728724').delete()
+        //this.client.api.applications(this.client.user.id).guilds('599715795391610904').commands('793491878590283796').delete()
+
+        this.client.api.applications(this.client.user.id).guilds('599715795391610904').commands.get().then(console.log);
+        this.client.api.applications(this.client.user.id).guilds('599715795391610904').commands.post({data: {
+            name: 'random',
+            description: 'Wysyła randomową liczbę. Ale super!',
+            options: [
+                {
+                    name: "Początek",
+                    description: "Początek zakresu",
+                    type: 4,
+                    required: true,
+                },
+                {
+                    name: "Koniec",
+                    description: "Koniec zakresu",
+                    type: 4,
+                    required: true
+                }
+            ]
+        }})
+
+        this.client.ws.on('INTERACTION_CREATE', async interaction => {
+            let start = interaction.data.options.find(opt => opt.name == 'początek').value,
+                end = interaction.data.options.find(opt => opt.name == 'koniec').value,
+                msg = '';
+
+            if (end <= start) msg = 'Zakres końcowy musi być większy od początkowego!';
+            else if (start < 0) msg = 'Liczby muszą być dodatnie!';
+            else if (end > 1000) msg = 'Maksymalny zakres to 0-1000';
+            else msg = `${outputs.get('ping')} ${Math.floor((Math.random() * (end - start)) + start)}`;
+
+            this.client.api.interactions(interaction.id, interaction.token).callback.post({
+                data: {
+                    type: 4,
+                    data: {
+                        content: msg
+                    }
+                }
+            })
+        })
+
+
     }
     onMessage(msg) {
         if (msg.channel.type != `text`) return;
-        this.ml.logs(msg);
+        //this.ml.logs(msg);
         if (msg.author.id == this.client.user.id) return;
 
         //if (msg.content == botConfig.prefix) return msg.channel.send(outputs.get(`ping`, [`<@!${msg.author.id}>`]));
