@@ -7,7 +7,9 @@ class Reputation extends CommandTemplate {
     constructor(msg, args) {
         super(msg, args);
         
+        console.log(args);
         args[1] = args[1].replace('.', '');
+        console.log(args);
 
         const memberToRep = this.getMember(2);
         if (memberToRep === undefined) {

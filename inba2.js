@@ -38,7 +38,8 @@ class MrInba {
         let args = [],
             result,
             argsPatt = new RegExp(/(?: "([^"\n]+)")|(?: ([^"\n ]+))/g);
-        while (result = argsPatt.exec(` ${msg.content.slice(botConfig.prefix.length + 1)}`)) args.push(result[1] ? result[1] : result[2]);
+        if (messageBeginsWithPrefix) while (result = argsPatt.exec(` ${msg.content.slice(botConfig.prefix.length + 1)}`)) args.push(result[1] ? result[1] : result[2]);
+        else while (result = argsPatt.exec(msg.content)) args.push(result[1] ? result[1] : result[2]);
 
         if (isMessageRep) {
             if (messageBeginsWithPrefix) {
