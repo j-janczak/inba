@@ -5,6 +5,7 @@ const express = require('express');
 const mongoConfig = require('./config.json');
 const serversRouter = require('./routers/server.js')
 const messageLogsRouter = require('./routers/message_log.js')
+const repPointsRouter = require('./routers/rep_point.js')
 
 mongoose.connect(mongoConfig.mongo.uri, mongoConfig.mongo.opt);
 const connection = mongoose.connection;
@@ -20,6 +21,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/', router);
 app.use('/servers', serversRouter.router);
 app.use('/message_logs', messageLogsRouter.router);
+app.use('/rep_points', repPointsRouter.router);
 
 router.get('/', (req, res, next) => {
     res.send("Welcome to Mr. Inba™ Api")

@@ -74,7 +74,31 @@ class CommandTemplate{
             .setColor(botConfig.botColor);
         this.send(embed);
     }
-    getString() {return outputs.get.apply(null, arguments)}
+    getString() {
+        return outputs.get.apply(null, arguments)
+    }
+    numberToEmoji(number, array) {
+        const strNumber = String(number);
+        let output = array ? [] : '';
+        const addToOutput = (emoji) => {
+            if (array) output.push(emoji);
+            else output += emoji;
+        };
+        for (let i = 0; i < strNumber.length; i++) {
+            if (strNumber.charAt(i) == '-') addToOutput(`-`);
+            else if (strNumber.charAt(i) == '1') addToOutput(`1️⃣`);
+            else if (strNumber.charAt(i) == '2') addToOutput(`2️⃣`);
+            else if (strNumber.charAt(i) == '3') addToOutput(`3️⃣`);
+            else if (strNumber.charAt(i) == '4') addToOutput(`4️⃣`);
+            else if (strNumber.charAt(i) == '5') addToOutput(`5️⃣`);
+            else if (strNumber.charAt(i) == '6') addToOutput(`6️⃣`);
+            else if (strNumber.charAt(i) == '7') addToOutput(`7️⃣`);
+            else if (strNumber.charAt(i) == '8') addToOutput(`8️⃣`);
+            else if (strNumber.charAt(i) == '9') addToOutput(`9️⃣`);
+            else if (strNumber.charAt(i) == '0') addToOutput(`0️⃣`);
+        }
+        return output;
+    }
 }
 
 module.exports = CommandTemplate;

@@ -11,7 +11,10 @@ function send(collName, dataArray) {
         const urlEncodedData = urlEncodedDataArray.join('&').replace(/%20/g, '+');
 
         axios.post(botConfig.dbUri + collName, urlEncodedData, {header: {"Content-type": "application/x-www-form-urlencoded"}})
-        .then(resolve)
+        .then(result => {
+            if (result.statusText == 'ERROR' || result.status != 200) reject(result);
+            else if (result.statusText == 'OK') resolve(result.data);
+        })
         .catch(reject);
     });
 }

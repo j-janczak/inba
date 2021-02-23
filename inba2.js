@@ -4,7 +4,6 @@ const messageLogs = require('./bot_files/message_logs.js');
 
 const commands = require(`./bot_files/commands.js`);
 
-
 /* TEMP */ const outputs = require(`./bot_files/inbaOutputs.js`);
 
 class MrInba {
@@ -22,6 +21,39 @@ class MrInba {
         this.client.user.setActivity(`!ji | Jestem w becie OwO`);
         console.log("Zalogowano");
 
+        this.initCommands();
+    }
+    onMessage(msg) {
+        if (msg.channel.type != `text`) return;
+
+        this.ml.logs(msg);
+
+        if (msg.author.id == this.client.user.id) return;
+        if (msg.content == botConfig.prefix) return msg.channel.send(outputs.get(`ping`, [`<@!${msg.author.id}>`]));
+
+        const isMessageRep            = msg.content.match(new RegExp(`^(${botConfig.prefix} )?\\.?(\\+|-)rep`, 'g')),
+              messageBeginsWithPrefix = msg.content.match(new RegExp(`^${botConfig.prefix} `, 'g'));
+        if (!isMessageRep && !messageBeginsWithPrefix) return
+
+        let args = [],
+            result,
+            argsPatt = new RegExp(/(?: "([^"\n]+)")|(?: ([^"\n ]+))/g);
+        while (result = argsPatt.exec(` ${msg.content.slice(botConfig.prefix.length + 1)}`)) args.push(result[1] ? result[1] : result[2]);
+
+        if (isMessageRep) {
+            if (messageBeginsWithPrefix) {
+                args.unshift(botConfig.prefix)
+            } else {
+                args.unshift(isMessageRep[0]);
+                args.unshift('');
+            }
+            this.client.commands.get('reputation').execute(msg, args);
+        } else {
+            const command = this.client.commands.get(args[0].toLowerCase()) || this.client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(args[0].toLowerCase()));
+            if (command) command.execute(msg, args);
+        }
+    }
+    initCommands() {
         //this.client.api.applications(this.client.user.id).guilds('599715795391610904').commands('793491355350728724').delete()
         //this.client.api.applications(this.client.user.id).guilds('599715795391610904').commands('793491878590283796').delete()
 
@@ -46,6 +78,7 @@ class MrInba {
         }})
 
         this.client.ws.on('INTERACTION_CREATE', async interaction => {
+            console.log(interaction);
             let start = interaction.data.options.find(opt => opt.name == 'początek').value,
                 end = interaction.data.options.find(opt => opt.name == 'koniec').value,
                 msg = '';
@@ -64,25 +97,6 @@ class MrInba {
                 }
             })
         })
-
-
-    }
-    onMessage(msg) {
-        if (msg.channel.type != `text`) return;
-        //this.ml.logs(msg);
-        if (msg.author.id == this.client.user.id) return;
-
-        //if (msg.content == botConfig.prefix) return msg.channel.send(outputs.get(`ping`, [`<@!${msg.author.id}>`]));
-        if (!msg.content.match((new RegExp(`^${botConfig.prefix} `, `g`)))) return;
-
-
-        let args = [],
-            result,
-            argsPatt = new RegExp(/(?: "([^"\n]+)")|(?: ([^"\n ]+))/g);
-        while (result = argsPatt.exec(` ${msg.content.slice(botConfig.prefix.length + 1)}`)) args.push(result[1] ? result[1] : result[2]);
-
-        const command = this.client.commands.get(args[0].toLowerCase()) || this.client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(args[0].toLowerCase()));
-        if (command) command.execute(msg, args);
     }
 }
 
