@@ -29,7 +29,7 @@ class MrInba {
         this.ml.logs(msg);
 
         //axel antyspam protection
-        if (msg.author.id == '690150027242635265') {
+        if (msg.author.id == '690150027242635265' || msg.author.id == '778380561525768202') {
             if (new RegExp('^\\+-*[1234567890.]+$', 'g').test(msg.content)) {
                 msg.delete().then(_m => {
                     msg.channel.send('❗ AxelBot **anti-spam** protection ❗').then(m => {
