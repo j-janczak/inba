@@ -21,7 +21,7 @@ class MrInba {
         this.client.user.setActivity(`!ji | Jestem w becie OwO`);
         console.log("Zalogowano");
 
-        this.initCommands();
+        //this.initCommands();
     }
     onMessage(msg) {
         if (msg.channel.type != `text`) return;
