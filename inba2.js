@@ -8,10 +8,13 @@ const commands = require(`./bot_files/commands.js`);
 
 class MrInba {
     constructor() {
-        this.client = new Discord.Client();
+        this.client = new Discord.Client({ partials: ['MESSAGE', 'REACTION'] });
         this.client.commands = commands.loadModules(`./commands`);
+
         this.client.on('ready', (c) => {this.ready(c)});
-        this.client.on('message', (msg) => {this.onMessage(msg)});
+        this.client.on('message', (msg) => {if (!msg.partial) this.onMessage(msg)});
+        this.client.on('messageReactionAdd', (reaction, user) => {this.onMessageReaction(reaction, user)});
+        this.client.on('messageReactionRemove', (reaction, user) => {this.onMessageReaction(reaction, user)});
 
         this.ml = new messageLogs();
 
@@ -27,19 +30,6 @@ class MrInba {
         if (msg.channel.type != `text`) return;
 
         this.ml.logs(msg);
-
-        //axel antyspam protection
-        if (msg.author.id == '690150027242635265' || msg.author.id == '778380561525768202') {
-            if (new RegExp('^\\+-*[1234567890.]+$', 'g').test(msg.content)) {
-                msg.delete().then(_m => {
-                    msg.channel.send('❗ AxelBot **anti-spam** protection ❗').then(m => {
-                        m.delete({ timeout: 1000 });
-                        return;
-                    })
-                })
-            }
-        }
-        //axel antyspam protection
 
         if (msg.author.id == this.client.user.id) return;
         if (msg.content == botConfig.prefix) return msg.channel.send(outputs.get(`ping`, [`<@!${msg.author.id}>`]));
@@ -67,7 +57,32 @@ class MrInba {
             if (command) command.execute(msg, args);
         }
     }
-    initCommands() {
+    async onMessageReaction(reaction, user) {
+        if (user.id == '646389189977309185' || user.id == '679814119729266713') return;
+        if (reaction.partial) await reaction.fetch();
+        if (reaction.message.partial) await reaction.message.fetch();
+        
+        if (reaction.message.author.id == '646389189977309185' || reaction.message.author.id == '679814119729266713' && reaction.message.embeds) {
+            if (reaction.message.embeds[0].footer != null && reaction.message.embeds[0].footer.text == 'Mr. Inba Pool') {
+                this.client.commands.get('pool').reaction(reaction);
+            }
+        }
+    }
+}
+
+new MrInba();
+
+
+
+
+
+
+
+
+
+
+
+/*initCommands() {
         //this.client.api.applications(this.client.user.id).guilds('599715795391610904').commands('793491355350728724').delete()
         //this.client.api.applications(this.client.user.id).guilds('599715795391610904').commands('793491878590283796').delete()
 
@@ -111,7 +126,4 @@ class MrInba {
                 }
             })
         })
-    }
-}
-
-new MrInba();
+    }*/

@@ -2,7 +2,7 @@ const inbaDB = require('./inbaDB.js');
 
 class MessageLogs {
     async logs(msg) {
-        console.log(msg.content);
+        console.log(`${msg.member.displayName} -> ${msg.guild.name} -> #${msg.channel.name}: ${msg.content}`);
         await inbaDB.send('message_logs', {
             _id: msg.id,
             server_id: msg.channel.guild.id,
