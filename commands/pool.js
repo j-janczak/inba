@@ -14,7 +14,8 @@ class Pool extends CommandTemplate {
     }
     createPool() {
         const poolContent = this.msg.content.substring(botConfig.prefix.length + 1 + this.args[0].length + 1 + this.args[1].length + 1).split(`\n`)
-        
+        if (poolContent.length < 3) return;
+
         let poolDescription = '';
         poolContent.forEach((element, index) => {
             if (index == 0) return;
