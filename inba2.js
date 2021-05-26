@@ -54,7 +54,7 @@ class MrInba {
             this.client.commands.get('reputation').execute(msg, args);
         } else {
             const command = this.client.commands.get(args[0].toLowerCase()) || this.client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(args[0].toLowerCase()));
-            if (command) command.execute(msg, args);
+            if (command) command.execute(msg, args, this.client);
         }
     }
     async onMessageReaction(reaction, user) {
@@ -63,8 +63,8 @@ class MrInba {
         if (reaction.message.partial) await reaction.message.fetch();
         
         if (reaction.message.author.id == '646389189977309185' || reaction.message.author.id == '679814119729266713' && reaction.message.embeds) {
-            if (reaction.message.embeds[0].footer != null && reaction.message.embeds[0].footer.text == 'Mr. Inba Pool') {
-                this.client.commands.get('pool').reaction(reaction);
+            if (reaction.message.embeds[0].footer != null && reaction.message.embeds[0].footer.text == 'Mr. Inba Poll') {
+                this.client.commands.get('poll').reaction(reaction);
             }
         }
     }

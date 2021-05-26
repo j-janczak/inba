@@ -2,8 +2,8 @@ const CommandTemplate = require(`./_Command.js`);
 const axios = require('axios');
 
 class Crypto extends CommandTemplate {
-    constructor(msg, args) {
-        super(msg, args);
+    constructor(msg, args, client) {
+        super(msg, args, client);
 
         if (args.length < 2) {
             this.sendEmbed(0, `Nie podano nazwy kryptowaluty do sprawdzenia!`);
@@ -58,5 +58,5 @@ class Crypto extends CommandTemplate {
 
 module.exports = {
     name: `crypto`,
-    execute(msg, args) {new Crypto(msg, args)}
+    execute(msg, args, client) {new Crypto(msg, args, client)}
 }

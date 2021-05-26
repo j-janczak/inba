@@ -3,9 +3,10 @@ const botConfig = require(`../cfg/config.json`);
 const Discord = require(`discord.js`);
 
 class CommandTemplate{
-    constructor(msg, args) {
+    constructor(msg, args, client) {
         this.msg = msg;
         this.args = args;
+        this.client = client
     }
     checkPermission() {
         let perm = (this.msg.author.id === '599569173990866965' || this.msg.member.hasPermission("ADMINISTRATOR"));
@@ -68,10 +69,10 @@ class CommandTemplate{
     } //https://codeburst.io/javascript-async-await-with-foreach-b6ba62bbf404 <3
     sendHelp(title, desc) {
         let embed = new Discord.MessageEmbed()
-            .setAuthor(`Mr. Inba Manual`)
+            .setAuthor(`Mr. Inba Manual`, this.client.user.avatarURL())
             .setTitle(title)
             .setDescription(desc)
-            .setColor(botConfig.botColor);
+            .setColor(botConfig.colors.botColor);
         this.send(embed);
     }
     getString() {

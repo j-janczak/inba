@@ -3,8 +3,8 @@ const botConfig = require(`../cfg/config.json`);
 const Discord = require(`discord.js`);
 
 class Ping extends CommandTemplate {
-    constructor(msg, args) {
-        super(msg, args);
+    constructor(msg, args, client) {
+        super(msg, args, client);
         this.sendPingEmbed();
     }
     sendPingEmbed() {
@@ -27,5 +27,5 @@ class Ping extends CommandTemplate {
 
 module.exports = {
     name: `ping`,
-    execute(msg, args) {new Ping(msg, args)}
+    execute(msg, args, client) {new Ping(msg, args, client)}
 }

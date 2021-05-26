@@ -4,8 +4,8 @@ const botConfig = require(`../cfg/config.json`);
 const Discord = require(`discord.js`);
 
 class Reputation extends CommandTemplate {
-    constructor(msg, args) {
-        super(msg, args);
+    constructor(msg, args, client) {
+        super(msg, args, client);
         
         console.log(args);
         args[1] = args[1].replace('.', '');
@@ -75,5 +75,5 @@ class Reputation extends CommandTemplate {
 
 module.exports = {
     name: `reputation`,
-    execute(msg, args) {new Reputation(msg, args)}
+    execute(msg, args, client) {new Reputation(msg, args, client)}
 }
