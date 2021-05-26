@@ -59,11 +59,11 @@ class MrInba {
         }
     }
     async onMessageReaction(reaction, user) {
-        if (user.id == '646389189977309185' || user.id == '679814119729266713') return;
+        if (user.id == '599715195740225537' || user.id == '646389189977309185') return;
         if (reaction.partial) await reaction.fetch();
         if (reaction.message.partial) await reaction.message.fetch();
         
-        if (reaction.message.author.id == '646389189977309185' || reaction.message.author.id == '679814119729266713' && reaction.message.embeds) {
+        if (reaction.message.author.id == '599715195740225537' || reaction.message.author.id == '646389189977309185' && reaction.message.embeds) {
             if (reaction.message.embeds[0].footer != null && reaction.message.embeds[0].footer.text == 'Mr. Inba Poll') {
                 this.client.commands.get('poll').reaction(reaction);
             }
