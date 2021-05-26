@@ -1,16 +1,14 @@
 const CommandTemplate = require(`./_Command.js`);
+const botConfig = require(`../cfg/config.json`);
 const axios = require('axios');
 
 class Crypto extends CommandTemplate {
     constructor(msg, args, client) {
         super(msg, args, client);
 
-        if (args.length < 2) {
-            this.sendEmbed(0, `Nie podano nazwy kryptowaluty do sprawdzenia!`);
-            return;
-        }
-
-        this.getData();
+        if (args.length < 2) this.help();
+        else if (this.args[1] == `help`) this.help();
+        else this.getData();
     }
     async getData() {
         try {
@@ -29,7 +27,7 @@ class Crypto extends CommandTemplate {
             console.log(result.data);
 
             if (Object.keys(result.data).length === 0) {
-                this.sendEmbed(0, "Nie znaleziono podanej kryptowaluty");
+                this.sendEmbed(0, this.getString(`crypto`, `notFound`));
                 return;
             }
 
@@ -38,7 +36,7 @@ class Crypto extends CommandTemplate {
                       cryptoCurrencyData = Object.entries(result.data)[0][1];
 
                 if (Object.keys(cryptoCurrencyData).length === 0) {
-                    this.sendEmbed(0, "Nie znaleziono podanej waluty");
+                    this.sendEmbed(0, this.getString(`crypto`, `notFound`));
                     return;
                 }
 
@@ -53,6 +51,22 @@ class Crypto extends CommandTemplate {
             console.error(error)
             this.sendEmbed(0, "Wystąpił błąd!");
         }
+    }
+    help() {
+        this.sendHelp(`Crypto`, `
+Displays the current value of the selected cryptocurrency
+\`${botConfig.prefix} ${this.args[0]} <currency1> <currency2>\`
+
+Examples of use:
+\`${botConfig.prefix} ${this.args[0]} btc\`
+\`${botConfig.prefix} ${this.args[0]} eth usd\`
+\`${botConfig.prefix} ${this.args[0]} btc eth\`
+
+Short names such as "btc" work with more popular cryptocurrencies, for the rest, use the full names:
+\`${botConfig.prefix} ${this.args[0]} numeraire usd\`
+
+*Powered by https://www.coingecko.com/pl/api*
+`);
     }
 }
 

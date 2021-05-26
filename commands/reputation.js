@@ -6,6 +6,11 @@ const Discord = require(`discord.js`);
 class Reputation extends CommandTemplate {
     constructor(msg, args, client) {
         super(msg, args, client);
+
+        if (args[0] == botConfig.prefix && (args[1] == '+rep' || args[1] == '-rep' || args[1] == 'rep') && args[2] == 'help') {
+            this.help();
+            return
+        }
         
         console.log(args);
         args[1] = args[1].replace('.', '');
@@ -70,6 +75,15 @@ class Reputation extends CommandTemplate {
         } catch (err) {
             console.error('ERROR');
         }
+    }
+    help() {
+        this.sendHelp(`Reputation`, `Adds reputation points to users
+\`${botConfig.prefix} +rep/-rep <user> <reason>\`
+
+Examples of use:
+\`${botConfig.prefix} +rep/-rep @DopeUser cuz i love you ❤\`
+\`${botConfig.prefix} +rep/-rep @DopeUser\`
+`);
     }
 }
 

@@ -52,7 +52,7 @@ class MrInba {
                 args.unshift(isMessageRep[0]);
                 args.unshift('');
             }
-            this.client.commands.get('reputation').execute(msg, args);
+            this.client.commands.get('reputation').execute(msg, args, this.client);
         } else {
             const command = this.client.commands.get(args[0].toLowerCase()) || this.client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(args[0].toLowerCase()));
             if (command) command.execute(msg, args, this.client);
