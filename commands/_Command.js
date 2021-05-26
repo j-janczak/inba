@@ -11,6 +11,7 @@ class CommandTemplate{
     checkPermission() {
         let perm = (this.msg.author.id === '599569173990866965' || this.msg.member.permissions.has("ADMINISTRATOR"));
         if (!perm) this.sendEmbed(0, this.getString(`noPermission`));
+        console.log()
         return perm;
     }
     getMember(argIndex) {

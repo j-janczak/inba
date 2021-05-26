@@ -8,7 +8,7 @@ class Mute extends CommandTemplate {
     constructor(msg, args, client) {
         super(msg, args, client);
 
-        if (!this.checkPermission) return;
+        if (!this.checkPermission()) return;
         if (this.args.length < 1) return;
 
         if (this.args[1] == `init`) this.initializeMute();
