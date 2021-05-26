@@ -11,7 +11,6 @@
     ],
     "noPermission": [
         "You don't have permission",
-        "You are not an admin",
         "This command is intended for administration"
     ],
     "typical": {
