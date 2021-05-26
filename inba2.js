@@ -15,6 +15,7 @@ class MrInba {
         this.client.on('message', (msg) => {if (!msg.partial) this.onMessage(msg)});
         this.client.on('messageReactionAdd', (reaction, user) => {this.onMessageReaction(reaction, user)});
         this.client.on('messageReactionRemove', (reaction, user) => {this.onMessageReaction(reaction, user)});
+        this.client.on('channelCreate', (channel) => {this.onChannelCreate(channel)});
 
         this.ml = new messageLogs();
 
@@ -67,6 +68,10 @@ class MrInba {
                 this.client.commands.get('poll').reaction(reaction);
             }
         }
+    }
+    onChannelCreate(channel) {
+        if (!['text' , 'category', 'voice'].includes(channel.type)) return;
+        this.client.commands.get('mute').newChannel(channel);
     }
 }
 

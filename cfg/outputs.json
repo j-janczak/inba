@@ -163,15 +163,12 @@
     },
     "mute": {
         "createRole": {
-            "warning": "The role `[Inba] Muted` is already created",
-            "success": "Successfully created `[Inba] Muted` role and updated `%s`**/**`%s` channels"
+            "warning": "The role `%s` is already created",
+            "success": "Successfully created `%s` role and updated `%s`**/**`%s` channels"
         },
         "assignRole": {
-            "error": "`[Inba] Muted` role doesn't exist, use the `%s muteInit` command",
-            "success": {
-                "title": "%s has been muted for `%s`",
-                "footer": "Will be unmuted at: %s"
-            },
+            "error": "`%s` role doesn't exist, use the `%s %s init` command first",
+            "success": "%s has been muted",
             "warning": "%s is already muted!"
         },
         "unmute": {
