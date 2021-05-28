@@ -19,6 +19,16 @@ function send(collName, dataArray) {
     });
 }
 
+function get(collName, dataArray) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const result = await axios.get(botConfig.dbUri + collName + "/" + dataArray.join("/"))
+            resolve(result);
+        } catch (e) {reject(e)}
+    });
+}
+
 module.exports = {
-    send
+    send,
+    get
 }

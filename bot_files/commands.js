@@ -12,5 +12,10 @@ module.exports = {
 			commands.set(command.name, command);
 		}
 		return commands;
+	},
+	getRandomInt(min, max) {
+		min = Math.ceil(min);
+		max = Math.floor(max);
+		return Math.floor(Math.random() * (max - min)) + min;
 	}
 };

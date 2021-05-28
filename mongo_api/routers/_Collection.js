@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 
 class Collection {
     constructor(name, schema) {
+        this.name = name;
         this.model = mongoose.model(name, new Schema(schema));
         this.router = express.Router();
         this.globasRes = undefined;
@@ -14,24 +15,24 @@ class Collection {
             this.post(data, req, res, next);
         });
     }
-    sendResult(collecionName, result) {
+    sendResult(result) {
         if (this.globasRes === undefined) {
             console.error('RES IS UNDEFINED');
             return;
         }
         if (result.error !== undefined) {
-            console.error(`[${collecionName}]`, result);
+            console.error(`[${this.name}]`, result);
             this.globasRes.statusMessage = "ERROR";
-            this.globasRes.send(result);
+            this.globasRes.send(result.error);
         } else {
-            console.log(`[${collecionName}]`, result);
+            console.log(`[${this.name}]`, result);
             this.globasRes.send(result);
         }
     }
     sendError(res) {}
     get(req, res, next) {}
     getOne(req, res, next) {}
-    post(dara, req, res, next) {}
+    post(data, req, res, next) {}
 }
 
 module.exports = Collection;

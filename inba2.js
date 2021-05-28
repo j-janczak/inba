@@ -1,6 +1,7 @@
+const messageLogs = require('./bot_files/message_logs.js');
+const inbaDB = require('./bot_files/inbaDB.js');
 const botConfig = require('./cfg/config.json');
 const Discord = require('discord.js');
-const messageLogs = require('./bot_files/message_logs.js');
 
 const commands = require(`./bot_files/commands.js`);
 
@@ -16,6 +17,9 @@ class MrInba {
         this.client.on('messageReactionAdd', (reaction, user) => {this.onMessageReaction(reaction, user)});
         this.client.on('messageReactionRemove', (reaction, user) => {this.onMessageReaction(reaction, user)});
         this.client.on('channelCreate', (channel) => {this.onChannelCreate(channel)});
+        this.client.on('guildCreate', (guild) => {this.onGuildCreate(guild)});
+        this.client.on('guildMemberAdd', (guildMember) => {this.onGuildMemberAddRemove(guildMember, 1)});
+        this.client.on('guildMemberRemove', (guildMember) => {this.onGuildMemberAddRemove(guildMember, 0)});
 
         this.ml = new messageLogs();
 
@@ -59,19 +63,34 @@ class MrInba {
         }
     }
     async onMessageReaction(reaction, user) {
-        if (user.id == '599715195740225537' || user.id == '646389189977309185') return;
+        if (user.id == this.client.user.id) return;
         if (reaction.partial) await reaction.fetch();
         if (reaction.message.partial) await reaction.message.fetch();
         
-        if (reaction.message.author.id == '599715195740225537' || reaction.message.author.id == '646389189977309185' && reaction.message.embeds) {
+        if (reaction.message.author.id == this.client.user.id && reaction.message.embeds) {
             if (reaction.message.embeds[0].footer != null && reaction.message.embeds[0].footer.text == 'Mr. Inba Poll') {
                 this.client.commands.get('poll').reaction(reaction);
             }
         }
     }
     onChannelCreate(channel) {
-        if (!['text' , 'category', 'voice'].includes(channel.type)) return;
+        if (!['text', 'category', 'voice'].includes(channel.type)) return;
         this.client.commands.get('mute').newChannel(channel);
+    }
+    async onGuildCreate(guild) {
+        const result = await inbaDB.send('servers', {_id: guild.id, name: guild.name});
+        console.log(result);
+    }
+    async onGuildMemberAddRemove(guildMember, type) {
+        try {
+            const messagesToSend = (type) ? await inbaDB.get('servers/welcomeMessages', [guildMember.guild.id]) : await inbaDB.get('servers/farewellMessages', [guildMember.guild.id]);
+            if (messagesToSend.data.messages.length > 0) {
+                const mNo = commands.getRandomInt(0, messagesToSend.data.messages.length);
+                const messageToSend = (type) ? messagesToSend.data.messages[mNo].replace('%u', `<@${guildMember.user.id}>`) : messagesToSend.data.messages[mNo].replace('%u', `\`${guildMember.user.tag}\``);
+
+                guildMember.guild.systemChannel.send(messageToSend);
+            }
+        } catch(e) {console.error(e)}
     }
 }
 
