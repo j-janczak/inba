@@ -13,6 +13,7 @@ class Help extends CommandTemplate {
 
 Available commands:
 \`${botConfig.prefix} crypto\` Displays the current value of the selected cryptocurrency
+\`${botConfig.prefix} status\` Displays the XCH Garden Pool statistics
 \`${botConfig.prefix} poll\` Polls wizard
 \`${botConfig.prefix} +rep/-rep\` Show love to other users, give them reputation points ❤`,
             fields: [
