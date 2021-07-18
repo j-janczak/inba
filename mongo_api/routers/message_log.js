@@ -3,6 +3,8 @@ const Collection = require("./_Collection.js");
 class MessageLog extends Collection {
     constructor(_name, _schema) {
         super(_name, _schema);
+
+        this.router.get('/serverRanking/:serverID', this.getServerRanking.bind(this));
     }
     /* override */ get(req, res, next) {
         let query = this.model.find({}).select('_id server channel author content clearContent attachments createdTime deleted');
@@ -26,6 +28,23 @@ class MessageLog extends Collection {
                 res.send(result);
             }
         });
+    }
+    async getServerRanking(req, res, next) {
+        this.globasRes = res;
+        
+        const rankingResult = await this.model.aggregate([
+            { $match: { 'server._id': req.params.serverID } },
+            {
+              $group: {
+                _id: '$author._id',
+                count: { $sum: 1 }
+              }
+            },
+            { $sort : { count : -1} },
+            { $limit : 20 }
+        ]);
+
+        this.sendResult(rankingResult);
     }
     /* override */ post(data, req, res, next) {
         const newLog = new this.model({
