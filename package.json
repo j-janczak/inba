@@ -18,7 +18,10 @@
   "homepage": "https://github.com/TheFlashes/inba#readme",
   "dependencies": {
     "axios": "^0.21.1",
-    "discord.js": "^12.5.3",
-    "mongodb": "^3.6.8"
+    "discord.js": "^13.0.0",
+    "mongodb": "^3.6.11"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0"
   }
 }

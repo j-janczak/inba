@@ -1,8 +1,8 @@
-const outputs = require(`../bot_files/inbaOutputs.js`);
+const outputs = require(`./inbaOutputs.js`);
 const botConfig = require(`../cfg/config.json`);
 const Discord = require(`discord.js`);
 
-class CommandTemplate{
+class CommandTemplate {
     constructor(msg, args, client) {
         this.msg = msg;
         this.args = args;
@@ -52,17 +52,6 @@ class CommandTemplate{
         .then(m => {if(callback) callback(m)})
         .catch(error => {console.error(`Failed to send msg!\nserwer: ${this.msg.guild.name}\nchannel:${this.msg.channel.name}\nerror: ${error}`)});
     }
-    sendEmbed(type, str) {
-        this.send(this.returnEmbed(type, str));
-    }
-    returnEmbed(type, str) {
-        let embed = new Discord.MessageEmbed();
-        if (type == 0) embed.setDescription(`⛔\xa0\xa0\xa0\xa0${str}`).setColor(`#D32F2F`);
-        else if (type == 1) embed.setDescription(`✅\xa0\xa0\xa0\xa0${str}`).setColor(`#00E676`);
-        else if (type == 2) embed.setDescription(`⚠\xa0\xa0\xa0\xa0${str}`).setColor(`#F57C00`);
-        else if (type == 3) embed.setDescription(`➡\xa0\xa0\xa0\xa0${str}`).setColor(`#039BE5`);
-        return embed;
-    }
     async asyncForEach(array, callback) {
         for (let index = 0; index < array.length; index++) {
             await callback(array[index], index, array);
@@ -75,9 +64,6 @@ class CommandTemplate{
             .setDescription(desc)
             .setColor(botConfig.colors.botColor);
         this.send(embed);
-    }
-    getString() {
-        return outputs.get.apply(null, arguments)
     }
     numberToEmoji(number, array) {
         const strNumber = String(number);
