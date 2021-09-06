@@ -63,7 +63,21 @@ async function onGuildMemberAddRemove(guildMember, type) {
 	catch(e) { console.error(e); }
 }
 
-client.on('guildMemberAdd', (guildMember) => { console.log('teset'); onGuildMemberAddRemove(guildMember, 1); });
+async function onMessageReaction(reaction, user) {
+	if (user.id == client.user.id) return;
+	if (reaction.partial) await reaction.fetch();
+	if (reaction.message.partial) await reaction.message.fetch();
+
+	if (reaction.message.author.id == client.user.id && reaction.message.embeds) {
+		if (reaction.message.embeds[0].footer != null && reaction.message.embeds[0].footer.text == 'Mr. Inba Poll') {
+			client.commands.get('poll').reaction(reaction);
+		}
+	}
+}
+
+client.on('guildMemberAdd', (guildMember) => { onGuildMemberAddRemove(guildMember, 1); });
 client.on('guildMemberRemove', (guildMember) => { onGuildMemberAddRemove(guildMember, 0); });
+client.on('messageReactionAdd', (reaction, user) => { onMessageReaction(reaction, user); });
+client.on('messageReactionRemove', (reaction, user) => { onMessageReaction(reaction, user); });
 
 client.login(token);

@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 const CommandTemplate = require('../bot_files/CommandTemplate');
 const botConfig = require('../cfg/config.json');
 const axios = require('axios');
