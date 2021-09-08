@@ -74,13 +74,13 @@ module.exports = {
 		options: [
 			{
 				name: 'coin',
-				type: 'STRING',
+				type: 3,
 				description: 'Waluta której wartość chcemy zobaczyć',
 				required: true,
 			},
 			{
 				name: 'second_coin',
-				type: 'STRING',
+				type: 3,
 				description: 'Waluta do której porównujemy (domyślnie PLN)',
 				required: false,
 			},

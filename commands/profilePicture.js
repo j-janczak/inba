@@ -25,7 +25,7 @@ module.exports = {
 		options: [
 			{
 				name: 'user',
-				type: 'USER',
+				type: 6,
 				description: 'Użytkownik którego awatar chcemy zobaczyć',
 				required: true,
 			},

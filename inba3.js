@@ -1,21 +1,25 @@
 const { Client, Intents, Collection } = require('discord.js');
+const { Routes } = require('discord-api-types/v9');
+const { REST } = require('@discordjs/rest');
+
 const inbaDB = require('./bot_files/inbaDB.js');
 const { token } = require('./cfg/config.json');
 const fs = require('fs');
 
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS] });
+const client = new Client({ intents: [Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS] });
 
 client.commands = new Collection();
-
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+const commandsData = [];
 
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
 	client.commands.set(command.interactionData.name, command);
+	commandsData.push(command.interactionData);
 }
 
 client.once('ready', () => {
-	console.log('Ready!d');
+	console.log('Ready!');
 });
 
 client.on('interactionCreate', async interaction => {
@@ -36,6 +40,8 @@ client.on('messageCreate', async message => {
 	if (!client.application?.owner) await client.application?.fetch();
 
 	if (message.content.toLowerCase() === '!mi deploy' && message.author.id === client.application?.owner.id) {
+		console.log(client.user.id);
+
 		console.log('Inicjacja komend\nUsuwanie starych komend');
 		await client.guilds.cache.get(message.guild.id)?.commands.fetch();
 		client.guilds.cache.get(message.guild.id)?.commands.cache.forEach(serverCommand => {
@@ -47,6 +53,24 @@ client.on('messageCreate', async message => {
 			client.guilds.cache.get(message.guild.id)?.commands.create(command.interactionData);
 			console.log(`Dodano ${command.interactionData.name}`);
 		});
+
+		const rest = new REST({ version: '9' }).setToken(token);
+
+		(async () => {
+			try {
+				console.log('Started refreshing application (/) commands.');
+
+				await rest.put(
+					Routes.applicationCommands(client.user.id),
+					{ body: commandsData },
+				);
+
+				console.log('Successfully reloaded application (/) commands.');
+			}
+			catch (error) {
+				console.error(error);
+			}
+		})();
 	}
 });
 

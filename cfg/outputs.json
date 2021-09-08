@@ -195,5 +195,10 @@
     },
     "crypto": {
         "notFound": "Not found cryptocurrency with the given name"
+    },
+    "poll": {
+        "error": {
+            "notEnoughOptions": "Poll must have at least two options"
+        }
     }
 }

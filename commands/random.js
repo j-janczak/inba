@@ -35,13 +35,13 @@ module.exports = {
 		options: [
 			{
 				name: 'min',
-				type: 'INTEGER',
+				type: 4,
 				description: 'Wartość minimalna',
 				required: false,
 			},
 			{
 				name: 'max',
-				type: 'INTEGER',
+				type: 4,
 				description: 'Wartość maksymalna',
 				required: false,
 			},
