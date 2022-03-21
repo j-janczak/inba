@@ -1,0 +1,11 @@
+{
+    "token": "NjQ2Mzg5MTg5OTc3MzA5MTg1.XdQa2A.h7oImXntifdJnQNhzDbKxz_z9Hk",
+    "owner": "599569173990866965",
+    "commandsPath": "./src/commands/",
+    "color": "5abae4",
+
+    "dev": {
+        "clientID": "646389189977309185",
+        "guildID": "599715795391610904"
+    }
+}
