@@ -34,10 +34,20 @@ class MrInba {
 
   onMessageCreate(msg) {
     if (msg.author.id != botConfig.owner) return;
+
+    let adminCommand = null;
+    if (msg.content.startsWith('!mi deleteCommands')) {
+      adminCommand = this.commands.find(c => c.commandData.name == 'deleteCommand');
+      if (adminCommand) new adminCommand.execute(msg, this.client);
+    }
+    if (msg.content.startsWith('!mi setupCommands')) {
+      adminCommand = this.commands.find(c => c.commandData.name == 'setupCommands');
+      if (adminCommand) new adminCommand.execute(msg, this.commands);
+    }
   }
 
   interactionCreate(interaction) {
-    const command = this.commands.find(c => c.name == interaction.commandName);
+    const command = this.commands.find(c => c.commandData.name == interaction.commandName);
     if (command) new command.execute(interaction, this.client);
   }
 }

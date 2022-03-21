@@ -22,6 +22,10 @@ class Ping extends Command {
 }
 
 module.exports = {
-  name: 'ping',
+  admin: false,
+  commandData: {
+    name: 'ping',
+    description: 'Sprawdź czy bot żyje. Chociaż, co to za życie...',
+  },
   execute: Ping
 };
