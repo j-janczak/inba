@@ -5,6 +5,7 @@ class Birthdays extends Router {
     super('birthdays', server, sqlPool);
 
     this.addRoute('GET', '', this.get.bind(this));
+    this.addRoute('GET', '{id}', this.getUser.bind(this));
   }
 
   async get(data, sqlConn) {
@@ -16,6 +17,11 @@ class Birthdays extends Router {
         date: birthday.date
       };
     });
+  }
+
+  async getUser(data, sqlConn, request) {
+    const birthday = await sqlConn.query('SELECT * FROM birthdays WHERE userID = ?', [request.params.id]);
+    return birthday;
   }
 }
 

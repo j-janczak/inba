@@ -1,4 +1,4 @@
-const log = require('../log.js');
+const { log } = require('../utils.js');
 class DeleteCommand {
   constructor(msg, client) {
     this.fetchCommands(msg, client);

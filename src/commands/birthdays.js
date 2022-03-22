@@ -1,12 +1,14 @@
-const botConfig = require('../config.json'),
+const { log, dbDateToPL } = require('../utils.js'),
+  botConfig = require('../config.json'),
   Command = require('../command.js'),
-  axios = require('../axios.js'),
-  log = require('../log.js');
+  axios = require('../axios.js');
 
 class Birthdays extends Command {
   constructor(interaction, client) {
     super(interaction, client);
-    this.downloadFullList();
+    
+    if (this.intr.options.get('użytkownik')) this.downloadUser();
+    else this.downloadFullList();
   }
 
   async downloadFullList() {
@@ -23,22 +25,17 @@ class Birthdays extends Command {
       nextBirthday = false;
     const today = new Date();
     birthdaysList.forEach((birthday, i) => {
-      const birthdayDate = new Date(birthday.date),
-        D = ('0' + birthdayDate.getDate()).slice(-2),
-        M = ('0' + (birthdayDate.getMonth() + 1)).slice(-2),
-        Y = String(birthdayDate.getFullYear());
+      const birthdayDate = new Date(birthday.date);
 
       if (birthdayDate.getMonth() == today.getMonth() && birthdayDate.getDate() == today.getDate() && !nextBirthday) {
-        embedDesc += `**${D}.${M}.${Y} - <@${birthday.userID}> To dzisiaj! 🎂**`;
+        embedDesc += `**${dbDateToPL(birthdayDate)} - <@${birthday.userID}> To dzisiaj! 🎂**`;
         nextBirthday = true;
-      } else if (birthdayDate.getMonth() > today.getMonth() && !nextBirthday) {
-        embedDesc += `**${D}.${M}.${Y} - <@${birthday.userID}> Najbliższe!**`;
-        nextBirthday = true;
-      } else if (birthdayDate.getMonth() == today.getMonth() && birthdayDate.getDate() > today.getDate() && !nextBirthday) {
-        embedDesc += `**${D}.${M}.${Y} - <@${birthday.userID}> Najbliższe!**`;
+      } else if ((birthdayDate.getMonth() > today.getMonth() && !nextBirthday) || 
+                (birthdayDate.getMonth() == today.getMonth() && birthdayDate.getDate() > today.getDate() && !nextBirthday)) {
+        embedDesc += `**${dbDateToPL(birthdayDate)} - <@${birthday.userID}> Najbliższe!**`;
         nextBirthday = true;
       } else
-        embedDesc += `${D}.${M}.${Y} - <@${birthday.userID}>`;
+        embedDesc += `${dbDateToPL(birthdayDate)} - <@${birthday.userID}>`;
 
       if (i < birthdaysList.length - 1) embedDesc += '\n';
     });
@@ -50,6 +47,34 @@ class Birthdays extends Command {
     };
 
     this.intr.reply({ embeds: [birthdaysEmbed] });
+  }
+
+  async downloadUser() {
+    const user = this.intr.options.get('użytkownik');
+
+    let birthdayData;
+    try {
+      birthdayData = await axios.get('birthdays/' + user.value);
+    } catch (e) {
+      log('ERROR! '.red + 'podczas pobierania listy urodzin'.brightRed);
+      console.error(e);
+      return;
+    }
+
+    if (birthdayData.length) {
+      const today = new Date(),
+        birthday = new Date(birthdayData[0].date);
+
+      birthday.setFullYear(today.getFullYear());
+
+      let diff = (today.getTime() > birthday.getTime()) ? today.getTime() - birthday.getTime() + 31556926000 : birthday.getTime() - today.getTime();
+      diff = Math.ceil(diff / (1000 * 3600 * 24));
+
+      this.intr.reply(`${user.member.displayName} ma urodziny ${dbDateToPL(birthdayData[0].date)}, to już za ${diff} dni!`);
+    } else {
+      const kotEmoji = await this.getEmoji('kotcry');
+      this.intr.reply('Nie mam tego użytkownika zapisanego w bazie danych ' + kotEmoji);
+    }
   }
 }
 

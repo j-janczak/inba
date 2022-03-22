@@ -11,10 +11,15 @@ class Ping extends Command {
   }
 
   async bigEmoji(option) {
-    const emojiID = (new RegExp('<:.+:(\\d+)>')).exec(option.value)[1],
-      emoji = await this.intr.guild.emojis.fetch(emojiID);
-    
-    this.intr.reply({ files: [emoji.url] });
+    const emojiRegex = new RegExp('^<:.+:(\\d+)>$');
+    if (emojiRegex.test(option.value)) {
+      const emojiID = emojiRegex.exec(option.value)[1],
+        emoji = await this.intr.guild.emojis.fetch(emojiID);
+      this.intr.reply({ files: [emoji.url] });
+    } else {
+      const kotemoji = await this.getEmoji('kot');
+      this.intr.reply({ content: 'To nie jest poprawna emotka cwaniaku ' + kotemoji, ephemeral: true });
+    }
   }
 }
 

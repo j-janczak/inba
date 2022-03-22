@@ -1,7 +1,7 @@
 const { Client, Intents } = require('discord.js'),
   botConfig = require('./src/config.json'),
+  { log } = require('./src/utils.js'),
   axios = require('./src/axios.js'),
-  log = require('./src/log.js'),
   path = require('path'),
   fs = require('fs');
 require('colors');

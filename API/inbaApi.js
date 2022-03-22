@@ -1,7 +1,7 @@
 const apiConfig = require('./src/config.json'),
+  { log } = require('../src/utils'),
   Hapi = require('@hapi/hapi'),
-  mariadb = require('mariadb'),
-  log = require('../src/log');
+  mariadb = require('mariadb');
 require('colors');
 
 const StartupTest = require('./src/routers/startupTest.js');

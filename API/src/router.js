@@ -1,4 +1,4 @@
-const log = require('../../src/log');
+const { log } = require('../../src/utils');
 
 class Router {
   constructor(routerName, server, sqlPool) {

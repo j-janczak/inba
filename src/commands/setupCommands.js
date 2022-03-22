@@ -1,4 +1,4 @@
-const log = require('../log.js');
+const { log } = require('../utils.js');
 
 class SetupCommands {
   constructor(msg, commandsList) {
