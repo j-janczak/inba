@@ -1,28 +1,31 @@
 const Router = require('../router.js');
 
 class Birthdays extends Router {
-  constructor (server, sqlPool) {
-    super('birthdays', server, sqlPool);
+  constructor (server, sqlPool, callRouter) {
+    super('birthdays', server, sqlPool, callRouter);
 
     this.addRoute('GET', '', this.get.bind(this));
     this.addRoute('GET', '{id}', this.getUser.bind(this));
   }
 
-  async get(data, sqlConn) {
+  async get(payload, params, sqlConn) {
     const birthdaysList = await sqlConn.query('SELECT * FROM birthdays ORDER BY MONTH(date), DAY(date)');
-    return birthdaysList.map(birthday => {
+    return this.sendResult(birthdaysList.map(birthday => {
       return {
         userID: birthday.userID,
         userName: birthday.userName,
         date: birthday.date
       };
-    });
+    }));
   }
 
-  async getUser(data, sqlConn, request) {
-    const birthday = await sqlConn.query('SELECT * FROM birthdays WHERE userID = ?', [request.params.id]);
-    return birthday;
+  async getUser(payload, params, sqlConn) {
+    const birthday = await sqlConn.query('SELECT * FROM birthdays WHERE userID = ?', [params.id]);
+    return this.sendResult(birthday);
   }
 }
 
-module.exports = Birthdays;
+module.exports = {
+  name: 'birthdays',
+  class: Birthdays
+};

@@ -1,11 +1,12 @@
 const { log } = require('../../src/utils');
 
 class Router {
-  constructor(routerName, server, sqlPool) {
+  constructor(routerName, server, sqlPool, callRouter) {
     log('Tworzenie routera ' + routerName.cyan);
     this.routerName = routerName;
     this.server = server;
     this.sqlPool = sqlPool;
+    this.callRouter = callRouter;
   }
 
   addRoute(method, name, callback) {
@@ -18,7 +19,7 @@ class Router {
         let sqlConn;
         try {
           sqlConn = await this.sqlPool.getConnection();
-          const querryResult = await callback(request.payload, sqlConn, request);
+          const querryResult = await callback(request.payload, request.params, sqlConn);
           return querryResult;
         } catch (error) {
           log('ERROR!'.red);
@@ -28,6 +29,21 @@ class Router {
         }
       }
     });
+  }
+
+  sendError(e) {
+    console.error(e);
+    return {
+      success: false,
+      error: e
+    };
+  }
+
+  sendResult(data) {
+    return {
+      success: true,
+      data: data
+    };
   }
 }
 

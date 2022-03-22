@@ -1,14 +1,14 @@
 const apiConfig = require('./src/config.json'),
   { log } = require('../src/utils'),
   Hapi = require('@hapi/hapi'),
-  mariadb = require('mariadb');
+  mariadb = require('mariadb'),
+  path = require('path'),
+  fs = require('fs');
 require('colors');
-
-const StartupTest = require('./src/routers/startupTest.js');
-const Birthdays = require('./src/routers/birthdays.js');
 
 class InbaApi {
   constructor() {
+    this.routers = [];
     this.sqlPool = mariadb.createPool(apiConfig.mariadb);
     this.server = Hapi.server(apiConfig.server);
     this.asyncConstructor();
@@ -35,6 +35,24 @@ class InbaApi {
     }
   }
 
+  initRouters() {
+    const callRouter = async (routerName, path, payload, params, sqlConn) => {
+      const router = this.routers.find(r => r.name == routerName);
+      if (router) return await router.class[path](payload, params, sqlConn);
+    };
+
+    const files = fs.readdirSync('./src/routers/');
+    files.forEach(file => {
+      if (path.extname(file) == '.js') {
+        const router = require('./src/routers/' + file);
+        this.routers.push({
+          name: router.name,
+          class: new router.class(this.server, this.sqlPool, callRouter)
+        });
+      }
+    });
+  }
+
   async startServer() {
     try {
       await this.server.start();
@@ -42,11 +60,6 @@ class InbaApi {
     } catch (e) {
       console.error(e);
     }
-  }
-
-  initRouters() {
-    new StartupTest(this.server, this.sqlPool);
-    new Birthdays(this.server, this.sqlPool);
   }
 }
 

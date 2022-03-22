@@ -67,7 +67,7 @@ class Birthdays extends Command {
 
       birthday.setFullYear(today.getFullYear());
 
-      let diff = (today.getTime() > birthday.getTime()) ? today.getTime() - birthday.getTime() + 31556926000 : birthday.getTime() - today.getTime();
+      let diff = (today.getTime() > birthday.getTime()) ? 31556926000 - (today.getTime() - birthday.getTime()) : birthday.getTime() - today.getTime();
       diff = Math.ceil(diff / (1000 * 3600 * 24));
 
       this.intr.reply(`${user.member.displayName} ma urodziny ${dbDateToPL(birthdayData[0].date)}, to już za ${diff} dni!`);
