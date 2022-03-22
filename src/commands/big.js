@@ -32,7 +32,8 @@ module.exports = {
           {
             name: 'wybierz',
             description: 'Wybierz użytkownika',
-            type: 6
+            type: 6,
+            required: true
           }
         ]
       },
@@ -44,7 +45,8 @@ module.exports = {
           {
             name: 'wybierz',
             description: 'Wstaw jedno emoji SERWEROWE',
-            type: 3
+            type: 3,
+            required: true
           }
         ]
       }

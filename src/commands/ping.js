@@ -1,5 +1,5 @@
-const botConfig = require('../config.json');
-const Command = require('../command.js');
+const botConfig = require('../config.json'),
+  Command = require('../command.js');
 
 class Ping extends Command {
   constructor(interaction, client) {

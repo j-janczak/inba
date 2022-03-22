@@ -1,9 +1,10 @@
+const { Client, Intents } = require('discord.js'),
+  botConfig = require('./src/config.json'),
+  axios = require('./src/axios.js'),
+  log = require('./src/log.js'),
+  path = require('path'),
+  fs = require('fs');
 require('colors');
-const { Client, Intents } = require('discord.js');
-const botConfig = require('./src/config.json');
-const log = require('./src/log.js');
-const path = require('path');
-const fs = require('fs');
 
 class MrInba {
   constructor () {
@@ -28,8 +29,16 @@ class MrInba {
     });
   }
 
-  onReady() {
+  async onReady() {
     log('Inba ' + 'powstała'.green);
+    log('Testowanie połączenia z api ' + botConfig.apiURL.cyan);
+    try {
+      await axios.get('startuptest');
+      log('Pomyślnie ' + 'połączono'.green + ' z api');
+    } catch (e) {
+      log('ERROR'.red + ' nie udało się nawiązać połączenia z api'.brightRed);
+      console.error(e);
+    }
   }
 
   onMessageCreate(msg) {
