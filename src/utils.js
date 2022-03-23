@@ -18,5 +18,10 @@ module.exports = {
       Y = date.getFullYear();
     return `${D}.${M}.${Y}`;
   },
+
+  asyncForEach: async (collection, callback) => {
+    for (const element of collection)
+      await callback(element);
+  }
 };
 

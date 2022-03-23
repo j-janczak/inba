@@ -1,0 +1,243 @@
+{
+  "form": [
+    {
+      "type": 1,
+      "components": [
+        {
+          "type": 3,
+          "custom_id": "kolor_Select",
+          "placeholder": "Wybierz kolor",
+          "options": null
+        }
+      ]
+    },
+    {
+      "type": 1,
+      "components": [
+        {
+          "type": 2,
+          "label": "Usuń kolor",
+          "style": 1,
+          "custom_id": "kolor_DeleteButton",
+          "emoji": {
+            "id": null,
+            "name": "🗑️"
+          }
+        },
+        {
+          "type": 2,
+          "label": "Dokładna lista kolorów",
+          "style": 2,
+          "custom_id": "kolor_ListButton",
+          "emoji": {
+            "id": null,
+            "name": "📃"
+          }
+        }
+      ]
+    }
+  ],
+
+  "colors": [
+    {
+      "name": "LightSteelBlue",
+      "value": "#b0c4de",
+      "emoji": {
+        "id": null,
+        "name": "⚪"
+      }
+    },
+    {
+      "name": "SkyBlue",
+      "value": "#87ceeb",
+      "emoji": {
+        "id": null,
+        "name": "🔵"
+      }
+    },
+    {
+      "name": "Aqua",
+      "value": "#00ffff",
+      "emoji": {
+        "id": null,
+        "name": "🔵"
+      }
+    },
+    {
+      "name": "Turquoise",
+      "value": "#40e0d0",
+      "emoji": {
+        "id": null,
+        "name": "🟢"
+      }
+    },
+    {
+      "name": "DeepSkyBlue",
+      "value": "#00bfff",
+      "emoji": {
+        "id": null,
+        "name": "🔵"
+      }
+    },
+    {
+      "name": "DodgerBlue",
+      "value": "#1e90ff",
+      "emoji": {
+        "id": null,
+        "name": "🔵"
+      }
+    },
+    {
+      "name": "RoyalBlue",
+      "value": "#4169e1",
+      "emoji": {
+        "id": null,
+        "name": "🔵"
+      }
+    },
+    {
+      "name": "MediumAqua",
+      "value": "#66cdaa",
+      "emoji": {
+        "id": null,
+        "name": "🟢"
+      }
+    },
+    {
+      "name": "PaleGreen",
+      "value": "#98fb98",
+      "emoji": {
+        "id": null,
+        "name": "🟢"
+      }
+    },
+    {
+      "name": "Lime",
+      "value": "#00ff00",
+      "emoji": {
+        "id": null,
+        "name": "🟢"
+      }
+    },
+    {
+      "name": "LimeGreen",
+      "value": "#32cd32",
+      "emoji": {
+        "id": null,
+        "name": "🟢"
+      }
+    },
+    {
+      "name": "Yellow",
+      "value": "#ffff00",
+      "emoji": {
+        "id": null,
+        "name": "🟡"
+      }
+    },
+    {
+      "name": "Gold",
+      "value": "#ffd700",
+      "emoji": {
+        "id": null,
+        "name": "🟡"
+      }
+    },
+    {
+      "name": "Orange",
+      "value": "#ffa500",
+      "emoji": {
+        "id": null,
+        "name": "🟠"
+      }
+    },
+    {
+      "name": "Coral",
+      "value": "#ff7f50",
+      "emoji": {
+        "id": null,
+        "name": "🟠"
+      }
+    },
+    {
+      "name": "Tomato",
+      "value": "#ff6347",
+      "emoji": {
+        "id": null,
+        "name": "🔴"
+      }
+    },
+    {
+      "name": "IndianRed",
+      "value": "#cd5c5c",
+      "emoji": {
+        "id": null,
+        "name": "🔴"
+      }
+    },
+    {
+      "name": "LightSalmon",
+      "value": "#ffa07a",
+      "emoji": {
+        "id": null,
+        "name": "🟠"
+      }
+    },
+    {
+      "name": "SandyBrown",
+      "value": "#f4a460",
+      "emoji": {
+        "id": null,
+        "name": "🟤"
+      }
+    },
+    {
+      "name": "RosyBrown",
+      "value": "#bc8f8f",
+      "emoji": {
+        "id": null,
+        "name": "🟤"
+      }
+    },
+    {
+      "name": "Plum",
+      "value": "#dda0dd",
+      "emoji": {
+        "id": null,
+        "name": "🟣"
+      }
+    },
+    {
+      "name": "Violet",
+      "value": "#ee82ee",
+      "emoji": {
+        "id": null,
+        "name": "🟣"
+      }
+    },
+    {
+      "name": "Fuchsia",
+      "value": "#ff00ff",
+      "emoji": {
+        "id": null,
+        "name": "🟣"
+      }
+    },
+    {
+      "name": "MediumPurple",
+      "value": "#9370db",
+      "emoji": {
+        "id": null,
+        "name": "🟣"
+      }
+    },
+    {
+      "name": "SlateBlue",
+      "value": "#6a5acd",
+      "emoji": {
+        "id": null,
+        "name": "🟣"
+      }
+    }
+  ]
+}

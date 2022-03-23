@@ -56,8 +56,13 @@ class MrInba {
   }
 
   interactionCreate(interaction) {
-    const command = this.commands.find(c => c.commandData.name == interaction.commandName);
-    if (command) new command.execute(interaction, this.client);
+    if (interaction.isCommand()) {
+      const command = this.commands.find(c => c.commandData.name == interaction.commandName);
+      if (command) new command.execute(interaction, this.client, false);
+    } else if (interaction.isSelectMenu() || interaction.isButton()) {
+      const command = this.commands.find(c => c.commandData.name == interaction.customId.split('_')[0]);
+      if (command) new command.execute(interaction, this.client, true);
+    }
   }
 }
 

@@ -2,6 +2,8 @@ class Command {
   constructor (interaction, client) {
     this.intr = interaction;
     this.member = interaction.member;
+    this.opt = interaction.options;
+    this.guild = interaction.guild;
     this.client = client;
 
     this.goodEmoji = ['gigachad', 'jestwpyte', 'lul', 'lorneta', 'catjam'];
