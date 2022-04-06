@@ -42,14 +42,14 @@ class MrInba {
   }
 
   onMessageCreate(msg) {
-    if (msg.author.id != botConfig.owner) return;
+    this.commands.find(c => c.commandData.name == 'log').logMsg(msg);
 
     let adminCommand = null;
-    if (msg.content.startsWith('!mi deleteCommands')) {
+    if (msg.content.startsWith('!mi deleteCommands') && msg.author.id == botConfig.owner) {
       adminCommand = this.commands.find(c => c.commandData.name == 'deleteCommand');
       if (adminCommand) new adminCommand.execute(msg, this.client);
     }
-    if (msg.content.startsWith('!mi setupCommands')) {
+    if (msg.content.startsWith('!mi setupCommands') && msg.author.id == botConfig.owner) {
       adminCommand = this.commands.find(c => c.commandData.name == 'setupCommands');
       if (adminCommand) new adminCommand.execute(msg, this.commands);
     }

@@ -31,6 +31,7 @@ class Command {
   }
 
   sendEmbed(type, msg) {
+    if (type == 0) console.error(msg);
     this.intr.reply({embeds: [this.getEmbed(type, msg)]});
   }
 
