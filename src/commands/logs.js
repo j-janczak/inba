@@ -3,10 +3,12 @@ const botConfig = require('../config.json'),
   axios = require('../axios.js'),
   { log } = require('../utils');
 
-class Ping extends Command {
-  constructor(interaction, client) {
-    super(interaction, client);
+class Logs extends Command {
+  constructor() {
+    super('logs');
+  }
 
+  async startCommand() {
     if (this.intr.options.getSubcommand() == 'ranking') this.ranking();
   }
 
@@ -55,6 +57,8 @@ async function logMsg(msg) {
   }
 }
 
+const logs = new Logs();
+
 module.exports = {
   admin: false,
   commandData: {
@@ -68,6 +72,6 @@ module.exports = {
       }
     ]
   },
-  execute: Ping,
+  execute: logs.execute.bind(logs),
   logMsg
 };

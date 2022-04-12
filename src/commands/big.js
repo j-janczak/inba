@@ -1,10 +1,12 @@
 const Command = require('../command.js');
 
 class Ping extends Command {
-  constructor(interaction, client) {
-    super(interaction, client);
+  constructor() {
+    super('big');
+  }
 
-    const option = this.intr.options.get('wybierz');
+  async startCommand() {
+    const option = this.opt.get('wybierz');
     if (option.type == 'USER') {
       this.intr.reply({ files: [option.user.avatarURL({ size: 4096 })] });
     } else this.bigEmoji(option);
@@ -22,6 +24,8 @@ class Ping extends Command {
     }
   }
 }
+
+const ping = new Ping();
 
 module.exports = {
   admin: false,
@@ -57,5 +61,5 @@ module.exports = {
       }
     ]
   },
-  execute: Ping
+  execute: ping.execute.bind(ping)
 };

@@ -1,14 +1,23 @@
+const { log } = require('./utils.js');
+
 class Command {
-  constructor (interaction, client) {
+  constructor (name) {
+    log('Inicjowanie ' + name.cyan);
+    this.goodEmoji = ['gigachad', 'jestwpyte', 'lul', 'lorneta', 'catjam'];
+    this.badEmoji = ['despair', 'kotcry', 'kot', 'kotobiad', 'kris'];
+  }
+
+  execute(interaction, client, componentInteraction) {
     this.intr = interaction;
     this.member = interaction.member;
     this.opt = interaction.options;
     this.guild = interaction.guild;
     this.client = client;
-
-    this.goodEmoji = ['gigachad', 'jestwpyte', 'lul', 'lorneta', 'catjam'];
-    this.badEmoji = ['despair', 'kotcry', 'kot', 'kotobiad', 'kris'];
+    this.startCommand(componentInteraction);
   }
+
+  /* @abstract */
+  async startCommand() {}
 
   async getEmoji (emojiName) {
     const emojis = await this.intr.guild.emojis.fetch(),

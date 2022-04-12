@@ -2,10 +2,12 @@ const botConfig = require('../config.json'),
   Command = require('../command.js'),
   axios = require('../axios.js');
 
-class Ping extends Command {
-  constructor(interaction, client) {
-    super(interaction, client);
-    
+class Rep extends Command {
+  constructor() {
+    super('rep');
+  }
+
+  async startCommand() {
     if (this.intr.options.getSubcommand() == 'plus') this.giveRepToUser(1);
     if (this.intr.options.getSubcommand() == 'minus') this.giveRepToUser(-1);
     if (this.intr.options.getSubcommand() == 'status') this.checkStatus();
@@ -115,6 +117,8 @@ class Ping extends Command {
   }
 }
 
+const rep = new Rep();
+
 module.exports = {
   admin: false,
   commandData: {
@@ -181,5 +185,5 @@ module.exports = {
       }
     ]
   },
-  execute: Ping
+  execute: rep.execute.bind(rep)
 };

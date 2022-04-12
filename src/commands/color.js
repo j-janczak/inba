@@ -3,9 +3,11 @@ const {form, colors} = require('../colorRoles.json'),
   Command = require('../command.js');
 
 class Color extends Command {
-  constructor(interaction, client, componentInteraction) {
-    super(interaction, client);
+  constructor() {
+    super('color');
+  }
 
+  async startCommand(componentInteraction) {
     if (componentInteraction) {
       if (this.intr.customId == 'kolor_ListButton') this.sendList(true);
       else if (this.intr.customId == 'kolor_DeleteButton') this.deleteUserColor(true);
@@ -111,6 +113,8 @@ class Color extends Command {
   }
 }
 
+const color = new Color();
+
 module.exports = {
   admin: false,
   commandData: {
@@ -154,5 +158,5 @@ module.exports = {
       }
     ]
   },
-  execute: Color
+  execute: color.execute.bind(color)
 };

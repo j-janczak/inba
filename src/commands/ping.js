@@ -2,12 +2,11 @@ const botConfig = require('../config.json'),
   Command = require('../command.js');
 
 class Ping extends Command {
-  constructor(interaction, client) {
-    super(interaction, client);
-    this.sendReply();
+  constructor() {
+    super('ping');
   }
 
-  async sendReply() {
+  async startCommand() {
     const pingEmbed = {
       color: botConfig.color,
       title: '🏓 Pong!',
@@ -21,11 +20,13 @@ class Ping extends Command {
   }
 }
 
+const ping = new Ping();
+
 module.exports = {
   admin: false,
   commandData: {
     name: 'ping',
     description: 'Sprawdź czy bot żyje. Chociaż, co to za życie...',
   },
-  execute: Ping
+  execute: ping.execute.bind(ping)
 };

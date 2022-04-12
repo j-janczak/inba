@@ -27,6 +27,8 @@ class MrInba {
       if (path.extname(file) == '.js') 
         this.commands.push(require(botConfig.commandsPath + file));
     });
+
+    this.commands.find(c => c.commandData.name == 'scifun').loadGif();
   }
 
   async onReady() {
@@ -58,10 +60,10 @@ class MrInba {
   interactionCreate(interaction) {
     if (interaction.isCommand()) {
       const command = this.commands.find(c => c.commandData.name == interaction.commandName);
-      if (command) new command.execute(interaction, this.client, false);
+      if (command) command.execute(interaction, this.client, false);
     } else if (interaction.isSelectMenu() || interaction.isButton()) {
       const command = this.commands.find(c => c.commandData.name == interaction.customId.split('_')[0]);
-      if (command) new command.execute(interaction, this.client, true);
+      if (command) command.execute(interaction, this.client, true);
     }
   }
 }

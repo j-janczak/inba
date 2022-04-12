@@ -4,10 +4,12 @@ const { log, dbDateToPL } = require('../utils.js'),
   axios = require('../axios.js');
 
 class Birthdays extends Command {
-  constructor(interaction, client) {
-    super(interaction, client);
-    
-    if (this.intr.options.get('użytkownik')) this.downloadUser();
+  constructor() {
+    super('birthdays');
+  }
+
+  async startCommand() {
+    if (this.opt.get('użytkownik')) this.downloadUser();
     else this.downloadFullList();
   }
 
@@ -78,6 +80,8 @@ class Birthdays extends Command {
   }
 }
 
+const birthdays = new Birthdays();
+
 module.exports = {
   admin: false,
   commandData: {
@@ -91,5 +95,5 @@ module.exports = {
       }
     ]
   },
-  execute: Birthdays
+  execute: birthdays.execute.bind(birthdays)
 };

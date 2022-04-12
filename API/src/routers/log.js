@@ -16,7 +16,7 @@ class Logs extends Router {
       await sqlConn.query('UPDATE servers SET msgCount = msgCount + 1 WHERE id = ?', [senderServer.data[0].id]);
       await sqlConn.query('INSERT INTO messageLogs (serverID, channelID, userID, bot, content, attachment, date) VALUES (?, ?, ?, ?, ?, ?, NOW())', [payload.serverID, payload.channelID, payload.userID, payload.bot, payload.content, payload.attachment]);
       
-      if (senderServer.data[0].msgCount % 1000 == 0)
+      if ((senderServer.data[0].msgCount + 1) % 1000 == 0)
         return this.sendResult({serverMilestone: senderServer.data[0].msgCount});
       else
         return this.sendResult({serverMilestone: 0});
