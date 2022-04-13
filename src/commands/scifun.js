@@ -68,12 +68,18 @@ class Scifun extends GifCommand {
     this.encoder.setFrameRate(20);
     this.encoder.start();
 
+    let x = 110, y = 210;
+
     let rotate = 0;
     try {
       for (const [i, frame] of this.mainGifFrames.entries()) {
         this.context.drawImage(frame, 0, 0);
-        this.drawRotatedImage(userImage, 115, 210, -rotate);
+        this.drawRotatedImage(userImage, x, y, -rotate);
         this.encoder.addFrame(this.context);
+
+        if (i >= 5 && i <= 15) {
+          x += 0.5;
+        }
   
         rotate += i / 2.25;
       }
