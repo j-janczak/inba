@@ -48,7 +48,7 @@ async function logMsg(msg) {
     });
 
     if (logResponse.serverMilestone != 0) {
-      msg.reply(`Jasny gwint, to jest ${logResponse.serverMilestone} wiadomośc na tym serwerze!`);
+      msg.reply(`Jasny gwint, to jest ${logResponse.serverMilestone + 1} wiadomość na tym serwerze!`);
     }
 
   } catch (e) {

@@ -1,4 +1,4 @@
-const {form, colors} = require('../colorRoles.json'),
+const {form, colors} = require('../assets/colorRoles.json'),
   botConfig = require('../config.json'),
   Command = require('../command.js');
 
@@ -53,7 +53,7 @@ class Color extends Command {
   }
 
   async sendList(ephemeral) {
-    await this.intr.reply({ files: ['src/colorList.png'], ephemeral: ephemeral });
+    await this.intr.reply({ files: ['src/assets/colorList.png'], ephemeral: ephemeral });
   }
 
   async sendForm() {
