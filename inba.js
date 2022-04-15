@@ -27,9 +27,6 @@ class MrInba {
       if (path.extname(file) == '.js') 
         this.commands.push(require(botConfig.commandsPath + file));
     });
-
-    //this.commands.find(c => c.commandData.name == 'scifun').loadGif();
-    //this.commands.find(c => c.commandData.name == 'enjoyer').loadGif();
   }
 
   async onReady() {
@@ -42,6 +39,9 @@ class MrInba {
       log('ERROR'.red + ' nie udało się nawiązać połączenia z api'.brightRed);
       console.error(e);
     }
+
+    this.commands.find(c => c.commandData.name == 'scifun').loadGif();
+    this.commands.find(c => c.commandData.name == 'enjoyer').loadGif();
   }
 
   onMessageCreate(msg) {
