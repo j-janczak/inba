@@ -3,3 +3,4 @@ src/config.json
 
 API/node_modules/*
 API/src/config.json
+.vscode/settings.json

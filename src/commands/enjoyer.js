@@ -74,7 +74,7 @@ module.exports = {
   admin: false,
   commandData: {
     name: 'enjoyer',
-    description: 'Sprawdź czy bot żyje. Chociaż, co to za życie...',
+    description: 'Zostań gigachadem',
     options: [
       {
         name: 'fan',

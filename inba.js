@@ -28,8 +28,8 @@ class MrInba {
         this.commands.push(require(botConfig.commandsPath + file));
     });
 
-    this.commands.find(c => c.commandData.name == 'scifun').loadGif();
-    this.commands.find(c => c.commandData.name == 'enjoyer').loadGif();
+    //this.commands.find(c => c.commandData.name == 'scifun').loadGif();
+    //this.commands.find(c => c.commandData.name == 'enjoyer').loadGif();
   }
 
   async onReady() {
