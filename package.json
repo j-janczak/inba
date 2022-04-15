@@ -1,33 +1,24 @@
 {
-  "name": "inba",
-  "version": "1.0.0",
-  "description": "Powerful Discord bot",
-  "main": "inba.js",
+  "name": "inba2",
+  "version": "2.0.0",
+  "description": "Discord Bot",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TheFlashes/Inba.git"
+    "url": "git+https://github.com/TheFlashes/inba.git"
   },
-  "keywords": [
-    "inba",
-    "bot",
-    "discord",
-    "moderation"
-  ],
-  "author": "TheFlashes",
+  "author": "Jakub Janczak",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/TheFlashes/Inba/issues"
+    "url": "https://github.com/TheFlashes/inba/issues"
   },
-  "homepage": "https://github.com/TheFlashes/Inba#readme",
+  "homepage": "https://github.com/TheFlashes/inba#readme",
   "dependencies": {
-    "colors": "^1.4.0",
-    "discord.js": "^12.3.1",
-    "mariadb": "^2.4.2",
-    "node-fetch": "^2.6.1",
-    "node-html-parser": "^1.2.21",
-    "prompt": "^1.0.0"
+    "axios": "^0.21.1",
+    "discord.js": "^12.5.3",
+    "mongodb": "^3.6.8"
   }
 }

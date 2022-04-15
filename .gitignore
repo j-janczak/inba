@@ -1,3 +1,4 @@
-config/config.json
-inba.code-workspace
-resources/color_list.xcf
+cfg/config.json
+/node_modules
+mongo_api/config.json
+mongo_api/node_modules/
