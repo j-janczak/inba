@@ -1,8 +1,8 @@
 {
-  "name": "inba2",
-  "version": "2.0.0",
+  "name": "inba",
+  "version": "4.0.0",
   "description": "Discord Bot",
-  "main": "index.js",
+  "main": "inba.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,20 +10,24 @@
     "type": "git",
     "url": "git+https://github.com/TheFlashes/inba.git"
   },
-  "author": "Jakub Janczak",
+  "author": "kubjan4@gmail.com",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/TheFlashes/inba/issues"
   },
   "homepage": "https://github.com/TheFlashes/inba#readme",
-  "dependencies": {
-    "@discordjs/rest": "^0.1.0-canary.0",
-    "axios": "^0.21.1",
-    "discord-api-types": "^0.23.0",
-    "discord.js": "^13.0.0",
-    "mongodb": "^3.6.11"
-  },
   "devDependencies": {
-    "eslint": "^7.32.0"
+    "eslint": "^8.11.0"
+  },
+  "dependencies": {
+    "@discordjs/builders": "^0.12.0",
+    "@discordjs/rest": "^0.3.0",
+    "axios": "^0.26.1",
+    "canvas": "^2.9.1",
+    "colors": "^1.4.0",
+    "discord-api-types": "^0.29.0",
+    "discord.js": "^13.6.0",
+    "gif-encoder-2": "^1.0.5",
+    "gif-frames": "^1.0.1"
   }
 }

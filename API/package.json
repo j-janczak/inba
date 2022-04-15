@@ -1,0 +1,16 @@
+{
+  "name": "inba_api",
+  "version": "2.0.0",
+  "description": "api for inba",
+  "main": "inbaApi.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@hapi/hapi": "^20.2.1",
+    "colors": "^1.4.0",
+    "mariadb": "^3.0.0"
+  }
+}

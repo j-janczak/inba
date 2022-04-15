@@ -1,4 +1,5 @@
-cfg/config.json
-/node_modules
-mongo_api/config.json
-mongo_api/node_modules/
+node_modules/*
+src/config.json
+
+API/node_modules/*
+API/src/config.json
